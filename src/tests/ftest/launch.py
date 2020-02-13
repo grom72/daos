@@ -33,6 +33,7 @@ import subprocess
 from sys import version_info
 import time
 import yaml
+import errno
 
 from ClusterShell.NodeSet import NodeSet
 from ClusterShell.Task import task_self
@@ -157,7 +158,13 @@ def set_test_environment(args):
             if state.lower() == "up":
                 # Get the interface speed - used to select the fastest available
                 with open(os.path.join(net_path, device, "speed"), "r") as fh:
-                    speed = int(fh.read().strip())
+                    try:
+                        speed = int(fh.read().strip())
+                    except IOError as ioerror:
+                        if ioerror.errno == errno.EINVAL:
+                            speed = 1000
+                        else:
+                            raise
                 print(
                     "  - {0:<5} (speed: {1:>6} state: {2})".format(
                         device, speed, state))

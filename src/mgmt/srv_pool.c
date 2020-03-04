@@ -79,8 +79,8 @@ ds_mgmt_tgt_pool_destroy(uuid_t pool_uuid)
 	td_out = crt_reply_get(td_req);
 	rc = td_out->td_rc;
 	if (rc != 0)
-		D_ERROR(DF_UUID": failed to update pool map on "DF_RC" "
-			"targets\n", DP_UUID(pool_uuid), DP_RC(rc));
+		D_ERROR(DF_UUID": failed to destory pool targets "DF_RC"\n",
+			DP_UUID(pool_uuid), DP_RC(rc));
 out_rpc:
 	crt_req_decref(td_req);
 

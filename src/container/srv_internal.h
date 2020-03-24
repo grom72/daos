@@ -146,6 +146,7 @@ struct cont_iv_key {
  * srv_container.c
  */
 void ds_cont_op_handler(crt_rpc_t *rpc);
+void ds_cont_set_prop_handler(crt_rpc_t *rpc);
 int ds_cont_bcast_create(crt_context_t ctx, struct cont_svc *svc,
 			 crt_opcode_t opcode, crt_rpc_t **rpc);
 int ds_cont_oid_fetch_add(uuid_t poh_uuid, uuid_t co_uuid, uuid_t coh_uuid,

@@ -206,6 +206,8 @@ type mockMgmtSvcClientConfig struct {
 	poolQueryErr      error
 	poolSetPropResult *mgmtpb.PoolSetPropResp
 	poolSetPropErr    error
+	contSetOwnerRet   *mgmtpb.ContSetOwnerResp
+	contSetOwnerErr   error
 }
 
 type mockMgmtSvcClient struct {
@@ -336,6 +338,10 @@ func (m *mockMgmtSvcClient) LeaderQuery(ctx context.Context, req *mgmtpb.LeaderQ
 func (m *mockMgmtSvcClient) ListContainers(ctx context.Context, req *mgmtpb.ListContReq, o ...grpc.CallOption) (*mgmtpb.ListContResp, error) {
 	// return successful list containers results
 	return &mgmtpb.ListContResp{}, nil
+}
+
+func (m *mockMgmtSvcClient) ContSetOwner(ctx context.Context, req *mgmtpb.ContSetOwnerReq, _ ...grpc.CallOption) (*mgmtpb.ContSetOwnerResp, error) {
+	return m.cfg.contSetOwnerRet, m.cfg.contSetOwnerErr
 }
 
 type mockControlConfig struct {

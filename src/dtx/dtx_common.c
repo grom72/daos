@@ -919,7 +919,7 @@ dtx_leader_exec_ops_ult(void *arg)
 		sub->dss_result = 0;
 		memset(&sub->dss_dce, 0, sizeof(sub->dss_dce));
 
-		if (sub->dss_tgt.st_rank == TGTS_IGNORE) {
+		if (sub->dss_tgt.st_rank == DAOS_TGT_IGNORE) {
 			int ret;
 
 			ret = ABT_future_set(future, dlh);

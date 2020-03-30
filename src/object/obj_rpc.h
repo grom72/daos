@@ -132,6 +132,8 @@ enum obj_rpc_flags {
 	 * now only used for single value EC handling.
 	 */
 	ORF_EC			= (1 << 4),
+	/** Erasure coding degraded fetch flag */
+	ORF_EC_DEGRADED		= (1 << 5),
 };
 
 struct obj_iod_array {
@@ -169,7 +171,8 @@ struct obj_iod_array {
 	((struct dtx_id)	(orw_dti_cos)		CRT_ARRAY) \
 	((d_sg_list_t)		(orw_sgls)		CRT_ARRAY) \
 	((crt_bulk_t)		(orw_bulks)		CRT_ARRAY) \
-	((struct daos_shard_tgt)(orw_shard_tgts)	CRT_ARRAY)
+	((struct daos_shard_tgt)(orw_shard_tgts)	CRT_ARRAY) \
+	((uint32_t)		(orw_tgt_idx)		CRT_VAR)
 
 #define DAOS_OSEQ_OBJ_RW	/* output fields */		 \
 	((int32_t)		(orw_ret)		CRT_VAR) \
@@ -179,8 +182,8 @@ struct obj_iod_array {
 	((daos_size_t)		(orw_iod_sizes)		CRT_ARRAY) \
 	((daos_size_t)		(orw_data_sizes)	CRT_ARRAY) \
 	((d_sg_list_t)		(orw_sgls)		CRT_ARRAY) \
-	((uint32_t)		(orw_nrs)		CRT_ARRAY) \
-	((struct dcs_iod_csums)	(orw_iod_csums)		CRT_ARRAY)
+	((struct dcs_iod_csums)	(orw_iod_csums)		CRT_ARRAY) \
+	((uint32_t)		(orw_nrs)		CRT_ARRAY)
 
 CRT_RPC_DECLARE(obj_rw,		DAOS_ISEQ_OBJ_RW, DAOS_OSEQ_OBJ_RW)
 CRT_RPC_DECLARE(obj_update,	DAOS_ISEQ_OBJ_RW, DAOS_OSEQ_OBJ_RW)

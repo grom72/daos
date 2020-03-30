@@ -92,7 +92,9 @@ extern "C" {
 	/** Incompatible durable format version */			\
 	ACTION(DER_DF_INCOMPT,		(DER_ERR_DAOS_BASE + 23))	\
 	/** Record size error */					\
-	ACTION(DER_REC_SIZE,		(DER_ERR_DAOS_BASE + 24))
+	ACTION(DER_REC_SIZE,		(DER_ERR_DAOS_BASE + 24))	\
+	/** Data lost or not recoverable */				\
+	ACTION(DER_DATA_LOSS,		(DER_ERR_DAOS_BASE + 25))
 
 #ifdef DAOS_USE_GURT_ERRNO
 	/* When new errno's added above, we need to define them here

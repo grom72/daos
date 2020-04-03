@@ -40,8 +40,8 @@
 // I.e. for testing library changes
 //@Library(value="pipeline-lib@your_branch") _
 
-
 def daos_branch = "release/0.9"
+def test_tag = "pr"
 def arch = ""
 def sanitized_JOB_NAME = JOB_NAME.toLowerCase().replaceAll('/', '-').replaceAll('%2f', '-')
 
@@ -160,7 +160,7 @@ def rpm_scan_post = '''rm -f ${WORKSPACE}/maldetect.xml
 
 // bail out of branch builds that are not on a whitelist
 if (!env.CHANGE_ID &&
-    (env.BRANCH_NAME != "weekly-testing" &&
+    (!env.BRANCH_NAME.startsWith("weekly-testing") &&
      !env.BRANCH_NAME.startsWith("release/") &&
      env.BRANCH_NAME != "master")) {
    currentBuild.result = 'SUCCESS'
@@ -172,7 +172,7 @@ pipeline {
 
     triggers {
         cron(env.BRANCH_NAME == 'master' ? '0 0 * * *\n' : '' +
-             env.BRANCH_NAME == 'weekly-testing' ? 'H 0 * * 6' : '')
+             env.BRANCH_NAME == 'weekly-testing-1.x' ? 'H 0 * * 6' : '')
     }
 
     environment {
@@ -184,7 +184,7 @@ pipeline {
                     "--build-arg NOBUILD=1 --build-arg UID=$env.UID "         +
                     "--build-arg JENKINS_URL=$env.JENKINS_URL "               +
                     "--build-arg CACHEBUST=${currentBuild.startTimeInMillis}"
-       QUICKBUILD = commitPragma(pragma: 'Quick-build').contains('true')
+        QUICKBUILD = commitPragma(pragma: 'Quick-build').contains('true')
         SSH_KEY_ARGS = "-ici_key"
         CLUSH_ARGS = "-o$SSH_KEY_ARGS"
         CART_COMMIT = sh(script: "sed -ne 's/CART *= *\\(.*\\)/\\1/p' utils/build.config",
@@ -209,8 +209,8 @@ pipeline {
             when {
                 beforeAgent true
                 allOf {
-                    not { branch 'weekly-testing' }
-                    expression { env.CHANGE_TARGET != 'weekly-testing' }
+                    not { branch 'weekly-testing*' }
+                    expression { env.CHANGE_TARGET != 'weekly-testing*' }
                 }
             }
             parallel {
@@ -353,8 +353,8 @@ pipeline {
                     when {
                         beforeAgent true
                         allOf {
-                            not { branch 'weekly-testing' }
-                            expression { env.CHANGE_TARGET != 'weekly-testing' }
+                            not { branch 'weekly-testing*' }
+                            expression { env.CHANGE_TARGET != 'weekly-testing*' }
                         }
                     }
                     agent {
@@ -645,8 +645,8 @@ pipeline {
                     when {
                         beforeAgent true
                         allOf {
-                            not { branch 'weekly-testing' }
-                            expression { env.CHANGE_TARGET != 'weekly-testing' }
+                            not { branch 'weekly-testing*' }
+                            expression { env.CHANGE_TARGET != 'weekly-testing*' }
                             expression { env.QUICKBUILD != 'true' }
                         }
                     }
@@ -829,8 +829,8 @@ pipeline {
                     when {
                         beforeAgent true
                         allOf {
-                            not { branch 'weekly-testing' }
-                            expression { env.CHANGE_TARGET != 'weekly-testing' }
+                            not { branch 'weekly-testing*' }
+                            expression { env.CHANGE_TARGET != 'weekly-testing*' }
                             expression { env.QUICKBUILD != 'true' }
                         }
                     }
@@ -1122,7 +1122,7 @@ pipeline {
                         runTest stashes: [ 'CentOS-install', 'CentOS-build-vars' ],
                                 script: '''test_tag=$(git show -s --format=%B | sed -ne "/^Test-tag:/s/^.*: *//p")
                                            if [ -z "$test_tag" ]; then
-                                               test_tag=pr,-hw
+                                               test_tag=''' + test_tag + ''',-hw
                                            fi
                                            tnodes=$(echo $NODELIST | cut -d ',' -f 1-9)
                                            # set DAOS_TARGET_OVERSUBSCRIBE env here
@@ -1209,7 +1209,7 @@ pipeline {
                         runTest stashes: [ 'CentOS-install', 'CentOS-build-vars' ],
                                 script: '''test_tag=$(git show -s --format=%B | sed -ne "/^Test-tag-hw-small:/s/^.*: *//p")
                                            if [ -z "$test_tag" ]; then
-                                               test_tag=pr,hw,small
+                                               test_tag=''' + test_tag + ''',hw,small
                                            fi
                                            tnodes=$(echo $NODELIST | cut -d ',' -f 1-3)
                                            clush -B -S -o '-i ci_key' -l root -w ${tnodes} \
@@ -1314,7 +1314,7 @@ pipeline {
                         runTest stashes: [ 'CentOS-install', 'CentOS-build-vars' ],
                                 script: '''test_tag=$(git show -s --format=%B | sed -ne "/^Test-tag-hw-medium:/s/^.*: *//p")
                                            if [ -z "$test_tag" ]; then
-                                               test_tag=pr,hw,medium,ib2
+                                               test_tag=''' + test_tag + ''',hw,medium,ib2
                                            fi
                                            tnodes=$(echo $NODELIST | cut -d ',' -f 1-5)
                                            clush -B -S -o '-i ci_key' -l root -w ${tnodes} \
@@ -1419,7 +1419,7 @@ pipeline {
                         runTest stashes: [ 'CentOS-install', 'CentOS-build-vars' ],
                                 script: '''test_tag=$(git show -s --format=%B | sed -ne "/^Test-tag-hw-large:/s/^.*: *//p")
                                            if [ -z "$test_tag" ]; then
-                                               test_tag=pr,hw,large
+                                               test_tag=''' + test_tag + ''',hw,large
                                            fi
                                            tnodes=$(echo $NODELIST | cut -d ',' -f 1-9)
                                            clush -B -S -o '-i ci_key' -l root -w ${tnodes} \
@@ -1493,8 +1493,8 @@ pipeline {
                     when {
                         beforeAgent true
                         allOf {
-                            not { branch 'weekly-testing' }
-                            expression { env.CHANGE_TARGET != 'weekly-testing' }
+                            not { branch 'weekly-testing*' }
+                            expression { env.CHANGE_TARGET != 'weekly-testing*' }
                             expression {
                                 ! commitPragma(pragma: 'Skip-test-centos-rpms').contains('true')
                             }
@@ -1531,8 +1531,8 @@ pipeline {
                     when {
                         beforeAgent true
                         allOf {
-                            not { branch 'weekly-testing' }
-                            not { environment name: 'CHANGE_TARGET', value: 'weekly-testing' }
+                            not { branch 'weekly-testing*' }
+                            not { environment name: 'CHANGE_TARGET', value: 'weekly-testing*' }
                             // expression { ! skip_stage('scan-centos-rpms') }
                         }
                     }

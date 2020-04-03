@@ -865,9 +865,11 @@ dma_drop_iod(struct bio_dma_buffer *bdb)
 	D_ASSERT(bdb->bdb_active_iods > 0);
 	bdb->bdb_active_iods--;
 
-	ABT_mutex_lock(bdb->bdb_mutex);
-	ABT_cond_broadcast(bdb->bdb_wait_iods);
-	ABT_mutex_unlock(bdb->bdb_mutex);
+	if (bdb->bdb_waiters) {
+		ABT_mutex_lock(bdb->bdb_mutex);
+		ABT_cond_broadcast(bdb->bdb_wait_iods);
+		ABT_mutex_unlock(bdb->bdb_mutex);
+	}
 }
 
 int
@@ -903,7 +905,9 @@ retry:
 			biod, retry_cnt++);
 
 		ABT_mutex_lock(bdb->bdb_mutex);
+		bdb->bdb_waiters++;
 		ABT_cond_wait(bdb->bdb_wait_iods, bdb->bdb_mutex);
+		bdb->bdb_waiters--;
 		ABT_mutex_unlock(bdb->bdb_mutex);
 
 		D_DEBUG(DB_IO, "IOD %p finished waiting. %d\n",

@@ -61,6 +61,7 @@ struct bio_dma_buffer {
 	struct bio_dma_chunk	*bdb_cur_chk;
 	unsigned int		 bdb_tot_cnt;
 	unsigned int		 bdb_active_iods;
+	unsigned int		 bdb_waiters;
 	ABT_cond		 bdb_wait_iods;
 	ABT_mutex		 bdb_mutex;
 };

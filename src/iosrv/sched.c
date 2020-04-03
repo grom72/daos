@@ -471,15 +471,15 @@ sched_create_pools(struct dss_xstream *dx)
 	int	i, rc;
 
 	for (i = 0; i < DSS_POOL_CNT; i++) {
-		/*
-		 * All pools should be created with ABT_POOL_ACCESS_MPSC to
-		 * allow in-pool ULTs creating new ULTs for other xstreams.
-		 *
-		 * Set 'automatic' as ABT_TRUE, so the pools will be freed
-		 * automatically.
-		 */
+		enum ABT_pool_access	access;
+
+		if (i == DSS_POOL_REBUILD)
+			access = ABT_POOL_ACCESS_MPSC;
+		else
+			access = ABT_POOL_ACCESS_PRIV;
+
 		D_ASSERT(dx->dx_pools[i] == ABT_POOL_NULL);
-		rc = ABT_pool_create_basic(ABT_POOL_FIFO, ABT_POOL_ACCESS_MPSC,
+		rc = ABT_pool_create_basic(ABT_POOL_FIFO, access,
 					   ABT_TRUE, &dx->dx_pools[i]);
 		if (rc != ABT_SUCCESS)
 			return rc;

@@ -181,8 +181,8 @@ add_sleep_list(struct dss_xstream *dx, struct dss_sleep_ult *new)
 	d_list_add_tail(&new->dsu_list, &dx->dx_sleep_ult_list);
 }
 
-struct dss_sleep_ult
-*dss_sleep_ult_create(void)
+struct dss_sleep_ult *
+dss_sleep_ult_create(void)
 {
 	struct dss_sleep_ult *dsu;
 	ABT_thread	     self;
@@ -551,6 +551,36 @@ signal:
 	}
 }
 
+static void
+dss_spawner(void *arg)
+{
+	struct dss_xstream	*dx = (struct dss_xstream *)arg;
+	ABT_thread_attr		 attr = ABT_THREAD_ATTR_NULL;
+	int			 rc;
+
+	rc = ABT_thread_attr_create(&attr);
+	if (rc != ABT_SUCCESS) {
+		D_CRIT("ABT_thread_attr_create failed %d\n", rc);
+		D_GOTO(failed, rc = dss_abterr2der(rc));
+	}
+
+	rc = ABT_thread_attr_set_stacksize(attr, 65536);
+	if (rc != ABT_SUCCESS) {
+		D_CRIT("ABT_thread_attr_set_stacksize failed %d\n", rc);
+		D_GOTO(failed, rc = dss_abterr2der(rc));
+	}
+
+	rc = ABT_thread_create(dx->dx_pools[DSS_POOL_NET_POLL],
+			       dss_srv_handler, dx, attr, &dx->dx_progress);
+	if (rc != ABT_SUCCESS) {
+		D_CRIT("ABT_thread_created failed %d\n", rc);
+		D_GOTO(failed, rc = dss_abterr2der(rc));
+	}
+failed:
+	if (attr != ABT_THREAD_ATTR_NULL)
+		ABT_thread_attr_free(&attr);
+}
+
 static inline struct dss_xstream *
 dss_xstream_alloc(hwloc_cpuset_t cpus)
 {
@@ -612,7 +642,6 @@ static int
 dss_start_one_xstream(hwloc_cpuset_t cpus, int xs_id)
 {
 	struct dss_xstream	*dx;
-	ABT_thread_attr		attr = ABT_THREAD_ATTR_NULL;
 	int			rc = 0;
 	bool			comm; /* true to create cart ctx for RPC */
 	int			xs_offset = 0;
@@ -675,22 +704,9 @@ dss_start_one_xstream(hwloc_cpuset_t cpus, int xs_id)
 		D_GOTO(out_sched, rc = dss_abterr2der(rc));
 	}
 
-	rc = ABT_thread_attr_create(&attr);
-	if (rc != ABT_SUCCESS) {
-		D_ERROR("ABT_thread_attr_create fails %d\n", rc);
-		D_GOTO(out_xstream, rc = dss_abterr2der(rc));
-	}
-
-	rc = ABT_thread_attr_set_stacksize(attr, 65536);
-	if (rc != ABT_SUCCESS) {
-		D_ERROR("ABT_thread_attr_set_stacksize fails %d\n", rc);
-		D_GOTO(out_xstream, rc = dss_abterr2der(rc));
-	}
-
 	/** start progress ULT */
-	rc = ABT_thread_create(dx->dx_pools[DSS_POOL_NET_POLL],
-			       dss_srv_handler, dx, attr,
-			       &dx->dx_progress);
+	rc = ABT_thread_create(dx->dx_pools[DSS_POOL_REBUILD],
+			       dss_spawner, dx, ABT_THREAD_ATTR_NULL, NULL);
 	if (rc != ABT_SUCCESS) {
 		D_ERROR("create progress ULT failed: %d\n", rc);
 		D_GOTO(out_xstream, rc = dss_abterr2der(rc));
@@ -708,7 +724,6 @@ dss_start_one_xstream(hwloc_cpuset_t cpus, int xs_id)
 	}
 	xstream_data.xd_xs_ptrs[xs_id] = dx;
 	ABT_mutex_unlock(xstream_data.xd_mutex);
-	ABT_thread_attr_free(&attr);
 
 	D_DEBUG(DB_TRACE, "created xstream name(%s)xs_id(%d)/tgt_id(%d)/"
 		"ctx_id(%d)/comm(%d)/is_main_xs(%d).\n",
@@ -716,9 +731,8 @@ dss_start_one_xstream(hwloc_cpuset_t cpus, int xs_id)
 		dx->dx_comm, dx->dx_main_xs);
 
 	return 0;
+
 out_xstream:
-	if (attr != ABT_THREAD_ATTR_NULL)
-		ABT_thread_attr_free(&attr);
 	ABT_xstream_join(dx->dx_xstream);
 	ABT_xstream_free(&dx->dx_xstream);
 out_sched:
@@ -1297,7 +1311,7 @@ dss_dump_ABT_state()
 	ABT_mutex_unlock(xstream_data.xd_mutex);
 }
 
-void
+bool
 dss_gc_run(daos_handle_t poh, int credits)
 {
 	struct dss_xstream *dxs	 = dss_current_xstream();
@@ -1335,16 +1349,28 @@ dss_gc_run(daos_handle_t poh, int credits)
 
 	if (total != 0) /* did something */
 		D_DEBUG(DB_TRACE, "GC consumed %d credits\n", total);
+
+	return !!total;
 }
 
 static void
 dss_gc_ult(void *args)
 {
 	 struct dss_xstream *dxs  = dss_current_xstream();
+	 struct dss_sleep_ult *dsu;
+
+	 dsu = dss_sleep_ult_create();
+	 D_ASSERT(dsu);
 
 	 while (!dss_xstream_exiting(dxs)) {
+		bool did_something;
+
 		/* -1 means GC will run until there is nothing to do */
-		dss_gc_run(DAOS_HDL_INVAL, -1);
-		ABT_thread_yield();
+		did_something = dss_gc_run(DAOS_HDL_INVAL, -1);
+		if (did_something)
+			ABT_thread_yield();
+		else
+			dss_ult_sleep(dsu, 1);
 	 }
+	 dss_sleep_ult_destroy(dsu);
 }

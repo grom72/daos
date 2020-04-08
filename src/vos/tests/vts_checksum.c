@@ -189,7 +189,7 @@ csum_for_arrays_test_case(void *const *state, struct test_case_args test)
 	 * how the server object layer already interfaces with VOS)
 	 */
 	vos_fetch_begin(k.container_hdl, k.object_id, 1, 0, &k.dkey, 1, &iod,
-			false, &ioh);
+			0, NULL, &ioh);
 
 	biod = vos_ioh2desc(ioh);
 	bsgl = bio_iod_sgl(biod, 0);
@@ -473,7 +473,7 @@ csum_fault_injection(void **state)
 	unset_csum_fi();
 
 	rc = vos_fetch_begin(k.container_hdl, k.object_id, 1, 0, &k.dkey, 1,
-			     &iod, false, &ioh);
+			     &iod, 0, NULL, &ioh);
 	assert_int_equal(0, rc);
 
 	fetched_csums = vos_ioh2ci(ioh);
@@ -489,7 +489,7 @@ csum_fault_injection(void **state)
 	assert_int_equal(0, rc);
 
 	rc = vos_fetch_begin(k.container_hdl, k.object_id, 1, 0, &k.dkey, 1,
-			     &iod, false, &ioh);
+			     &iod, 0, NULL, &ioh);
 	assert_int_equal(0, rc);
 
 	fetched_csums = vos_ioh2ci(ioh);

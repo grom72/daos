@@ -691,7 +691,7 @@ ds_pool_iv_prop_update(struct ds_pool *pool, daos_prop_t *prop)
 	pool_iv_prop_l2g(prop, &iv_entry->piv_prop);
 
 	rc = pool_iv_update(pool->sp_iv_ns, IV_POOL_PROP, iv_entry, size,
-			    CRT_IV_SHORTCUT_NONE, CRT_IV_SYNC_EAGER, true);
+			    CRT_IV_SHORTCUT_NONE, CRT_IV_SYNC_EAGER, false);
 	if (rc)
 		D_ERROR("pool_iv_update failed "DF_RC"\n", DP_RC(rc));
 	D_FREE(iv_entry);

@@ -52,7 +52,7 @@ def daos_packages_version = ""
 def el7_component_repos = ""
 def component_repos = ""
 def daos_repo = "daos@${env.BRANCH_NAME}:${env.BUILD_NUMBER}"
-def el7_daos_repos = el7_component_repos + ' ' + component_repos + ' ' + daos_repo
+def el7_daos_repos = el7_component_repos + ' ' + component_repos
 def functional_rpms  = "--exclude openmpi openmpi3 hwloc ndctl " +
                        "ior-hpc-cart-4-daos-0 mpich-autoload-cart-4-daos-0 " +
                        "romio-tests-cart-4-daos-0 hdf5-tests-cart-4-daos-0 " +
@@ -1136,6 +1136,7 @@ pipeline {
                             //daos_packages_version = readFile('centos7-rpm-version').trim()
                             if (0==1) {
                                 unstash 'CentOS-rpm-version'
+                                el7_daos_repos += ' ' + daos_repo
                             }
                             daos_packages_version = commitPragma(pragma: 'RPM-test-version')
                         }

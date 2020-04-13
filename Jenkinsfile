@@ -1145,9 +1145,9 @@ pipeline {
                                        distro: 'el7',
                                        snapshot: true,
                                        inst_repos: el7_daos_repos,
-                                       inst_rpms: 'daos{,-{client,tests,server}}-' +
-                                                  daos_packages_version + ' ' +
-                                                  functional_rpms
+                                       inst_rpms: functional_rpms + ' ' +
+                                                  'daos{,-{client,tests,server}}-' +
+                                                  daos_packages_version
                         runTestFunctional pragma_suffix: '',
                                           test_tag: 'pr,-hw',
                                           node_count: 9,

@@ -56,17 +56,8 @@ def el7_daos_repos = el7_component_repos + ' ' + component_repos + ' ' + daos_re
 def functional_rpms  = "--exclude openmpi openmpi3 hwloc ndctl " +
                        "ior-hpc-cart-4-daos-0 mpich-autoload-cart-4-daos-0 " +
                        "romio-tests-cart-4-daos-0 hdf5-tests-cart-4-daos-0 " +
-                       "mpi4py-tests-cart-4-daos-0 testmpio-cart-4-daos-0 fio"
-if (quickbuild()) {
-    /* TODO: this is a big fat hack
-     * what we should be doing here is installing all of the
-     * $(repoquery --requires daos{,-{server,tests}}) dependencies
-     * similar to how we do for QUICKBUILD_DEPS
-     * or just start testing from RPMs instead of continuing to hack
-     * around that :-)
-     */
-    functional_rpms += " spdk-tools"
-}
+                       "mpi4py-tests-cart-4-daos-0 testmpio-cart-4-daos-0 fio " +
+                       "spdk-tools"
 
 def rpm_test_pre = '''if git show -s --format=%B | grep "^Skip-test: true"; then
                           exit 0

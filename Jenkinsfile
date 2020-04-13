@@ -40,7 +40,7 @@
 // I.e. for testing library changes
 @Library(value="pipeline-lib@bmurrell/runTestFunctional") _
 
-def quickbuild(String stage) {
+def quickbuild() {
     return commitPragma(pragma: 'Quick-build').contains('true')
 }
 
@@ -57,7 +57,7 @@ def functional_rpms  = "--exclude openmpi openmpi3 hwloc ndctl " +
                        "ior-hpc-cart-4-daos-0 mpich-autoload-cart-4-daos-0 " +
                        "romio-tests-cart-4-daos-0 hdf5-tests-cart-4-daos-0 " +
                        "mpi4py-tests-cart-4-daos-0 testmpio-cart-4-daos-0 fio"
-if (quickbuild) {
+if (quickbuild()) {
     /* TODO: this is a big fat hack
      * what we should be doing here is installing all of the
      * $(repoquery --requires daos{,-{server,tests}}) dependencies
@@ -483,7 +483,7 @@ pipeline {
                             label 'docker_runner'
                             additionalBuildArgs "-t ${sanitized_JOB_NAME}-centos7 " +
                                                 '$BUILDARGS ' +
-                                                '--build-arg QUICKBUILD=' + quickbuild +
+                                                '--build-arg QUICKBUILD=' + quickbuild() +
                                                 ' --build-arg QUICKBUILD_DEPS="' + env.QUICKBUILD_DEPS +
                                                 '" --build-arg REPOS="' + component_repos + '"'
                         }
@@ -573,7 +573,7 @@ pipeline {
                         beforeAgent true
                         allOf {
                             branch 'master'
-                            expression { quickbuild != 'true' }
+                            expression { ! quickbuild() }
                         }
                     }
                     agent {
@@ -634,7 +634,7 @@ pipeline {
                         beforeAgent true
                         allOf {
                             branch 'master'
-                            expression { quickbuild != 'true' }
+                            expression { ! quickbuild() }
                         }
                     }
                     agent {
@@ -696,7 +696,7 @@ pipeline {
                         allOf {
                             not { branch 'weekly-testing' }
                             expression { env.CHANGE_TARGET != 'weekly-testing' }
-                            expression { quickbuild != 'true' }
+                            expression { ! quickbuild() }
                         }
                     }
                     agent {
@@ -757,7 +757,7 @@ pipeline {
                         beforeAgent true
                         allOf {
                             branch 'master'
-                            expression { quickbuild != 'true' }
+                            expression { ! quickbuild() }
                         }
                     }
                     agent {
@@ -818,7 +818,7 @@ pipeline {
                         beforeAgent true
                         allOf {
                             branch 'master'
-                            expression { quickbuild != 'true' }
+                            expression { ! quickbuild() }
                         }
                     }
                     agent {
@@ -880,7 +880,7 @@ pipeline {
                         allOf {
                             not { branch 'weekly-testing' }
                             expression { env.CHANGE_TARGET != 'weekly-testing' }
-                            expression { quickbuild != 'true' }
+                            expression { ! quickbuild() }
                         }
                     }
                     agent {

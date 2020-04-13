@@ -1134,7 +1134,8 @@ pipeline {
                     steps {
                         unstash 'CentOS-rpm-version'
                         script {
-                            daos_packages_version = readFile('centos7-rpm-version').trim()
+                            //daos_packages_version = readFile('centos7-rpm-version').trim()
+                            daos_packages_version = commitPragma(pragma: 'RPM-test-version')
                         }
                         provisionNodes NODELIST: env.NODELIST,
                                        node_count: 9,

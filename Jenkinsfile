@@ -40,6 +40,10 @@
 // I.e. for testing library changes
 @Library(value="pipeline-lib@bmurrell/runTestFunctional") _
 
+def quickbuild(String stage) {
+    return commitPragma(pragma: 'Quick-build').contains('true')
+}
+
 def daos_branch = "master"
 def arch = ""
 def sanitized_JOB_NAME = JOB_NAME.toLowerCase().replaceAll('/', '-').replaceAll('%2f', '-')
@@ -53,7 +57,6 @@ def functional_rpms  = "--exclude openmpi openmpi3 hwloc ndctl " +
                        "ior-hpc-cart-4-daos-0 mpich-autoload-cart-4-daos-0 " +
                        "romio-tests-cart-4-daos-0 hdf5-tests-cart-4-daos-0 " +
                        "mpi4py-tests-cart-4-daos-0 testmpio-cart-4-daos-0 fio"
-def quickbuild = node() { commitPragma(pragma: 'Quick-build').contains('true') }
 if (quickbuild) {
     /* TODO: this is a big fat hack
      * what we should be doing here is installing all of the
@@ -1148,8 +1151,7 @@ pipeline {
                                        distro: 'el7',
                                        snapshot: true,
                                        inst_repos: el7_daos_repos,
-                                       inst_rpms: 'daos-' + daos_packages_version +
-                                                  ' daos-{tests,server}-' +
+                                       inst_rpms: 'daos{,-{client,tests,server}}-' +
                                                   daos_packages_version + ' ' +
                                                   functional_rpms
                         runTestFunctional pragma_suffix: '',
@@ -1226,8 +1228,8 @@ pipeline {
                                        profile: 'daos_ci',
                                        distro: 'el7',
                                        inst_repos: el7_daos_repos,
-                                       inst_rpms: 'daos-' + daos_packages_version +
-                                                  ' daos-client-' + daos_packages_version +
+                                       inst_rpms: 'daos{,-{client,tests,server}}-' +
+                                                  daos_packages_version + ' ' +
                                                   ' ' + functional_rpms
                         runTestFunctional stashes: [ 'CentOS-install', 'CentOS-build-vars' ],
                                           pragma_suffix: '-hw-small',
@@ -1304,8 +1306,8 @@ pipeline {
                                        profile: 'daos_ci',
                                        distro: 'el7',
                                        inst_repos: el7_daos_repos,
-                                       inst_rpms: 'daos-' + daos_packages_version +
-                                                  ' daos-client-' + daos_packages_version +
+                                       inst_rpms: 'daos{,-{client,tests,server}}-' +
+                                                  daos_packages_version + ' ' +
                                                   ' ' + functional_rpms
                         runTestFunctional stashes: [ 'CentOS-install', 'CentOS-build-vars' ],
                                           pragma_suffix: '-hw-medium',
@@ -1382,8 +1384,8 @@ pipeline {
                                        profile: 'daos_ci',
                                        distro: 'el7',
                                        inst_repos: el7_daos_repos,
-                                       inst_rpms: 'daos-' + daos_packages_version +
-                                                  ' daos-client-' + daos_packages_version +
+                                       inst_rpms: 'daos{,-{client,tests,server}}-' +
+                                                  daos_packages_version + ' ' +
                                                   ' ' + functional_rpms
                         runFunctionalTest stashes: [ 'CentOS-install', 'CentOS-build-vars' ],
                                           pragma_suffix: '-hw-large',

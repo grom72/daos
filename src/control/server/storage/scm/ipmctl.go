@@ -254,7 +254,7 @@ func (cr *cmdRunner) processActionableState(req storage.ScmPrepareRequest, state
 }
 
 // Verify state is as expected and that created namespaces' block device names match the socket ID
-// of the underlying PMem region and that the the expected number of namespaces exist per region.
+// of the underlying PMem region and that the expected number of namespaces exist per region.
 func verifyPMem(log logging.Logger, resp *storage.ScmPrepareResponse, regions Regions, nrNsPerSock uint) error {
 	if resp == nil {
 		return errors.New("verifyPMem received nil ScmScanResponse")

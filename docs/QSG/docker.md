@@ -6,7 +6,7 @@ using DAOS as backend storage.  This small cluster is composed of the following 
 - The `daos-server` node running a DAOS server daemon managing data storage devices such as SCM or
   NVMe disks.
 - The `daos-admin` node allowing to manage the DAOS server thanks to `dmg`command.
-- The `daos-client` node using the the DAOS server to store data.
+- The `daos-client` node using the DAOS server to store data.
 
 At this time only emulated hardware storage are supported by this Docker platform:
 

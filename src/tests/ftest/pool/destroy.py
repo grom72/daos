@@ -29,7 +29,7 @@ class DestroyTests(TestWithServers):
             hosts (NodeSet): hosts to include in the server group
 
         Returns:
-            dict: the the server group argument for the start_servers()
+            dict: the server group argument for the start_servers()
                 method
 
         """

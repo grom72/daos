@@ -21,7 +21,7 @@ ifeq ($(ID),fedora)
 DOCKER   := podman
 SPECTOOL := spectool
 # a Fedora-based mock builder
-# derive the the values of:
+# derive the values of:
 # VERSION_ID (i.e. 7)
 # DISTRO_ID (i.e. el7)
 # DISTRO_BASE (i.e. EL_7)

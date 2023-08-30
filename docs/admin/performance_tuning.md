@@ -404,7 +404,7 @@ IOR (<https://github.com/hpc/ior>) with the following backends:
 -   An HDF5 VOL connector for DAOS is under development. This maps the HDF5 data model
     directly to the DAOS data model, and works in conjunction with DAOS containers of
     `--type=HDF5` (in contrast to DAOS container of `--type=POSIX` that are used for
-    the other IOR APIs). Please refer the the [HDF5 with DAOS documentation][9].
+    the other IOR APIs). Please refer the [HDF5 with DAOS documentation][9].
 
 IOR has several parameters to characterize performance. The main parameters to
 work with include:

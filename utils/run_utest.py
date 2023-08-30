@@ -639,7 +639,7 @@ def get_path_info(args):
 
 
 def main():
-    """Run the the core tests"""
+    """Run the core tests"""
     args = get_args()
     path_info = get_path_info(args)
 

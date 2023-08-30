@@ -396,7 +396,7 @@ class Test(avocadoTest):
         return errors
 
     def _cleanup(self):
-        """Run all the the cleanup methods from last to first.
+        """Run all the cleanup methods from last to first.
 
         Returns:
             list: a list of error strings to report at the end of tearDown().

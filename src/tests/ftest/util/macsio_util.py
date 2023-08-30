@@ -55,7 +55,7 @@ class MacsioCommand(ExecutableCommand):
         #       shared File (Rich Man's) mode. If you also give a file count for
         #       SIF mode, then MACSio will perform a sort of hybrid combination
         #       of MIF and SIF modes.  It will produce the specified number of
-        #       files by grouping ranks in the the same way MIF does, but I/O
+        #       files by grouping ranks in the same way MIF does, but I/O
         #       within each group will be to a single, shared file using SIF
         #       mode.
         #

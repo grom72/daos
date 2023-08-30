@@ -97,7 +97,7 @@ function generate_ca_cert () {
         -out "${CERTS}/daosCA.crt" -batch
     [[ $EUID -eq 0 ]] && chown root.daos_daemons "${CERTS}/daosCA.crt" 2>/dev/null
     chmod 0644 "${CERTS}/daosCA.crt"
-    # Reset the the CA index
+    # Reset the CA index
     rm -f "${CA_HOME}/index.txt" "${CA_HOME}/serial.txt"
     touch "${CA_HOME}/index.txt"
     echo '01' > "${CA_HOME}/serial.txt"

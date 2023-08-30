@@ -568,7 +568,7 @@ class LogIter():
     def new_iter(self, pid=None, stateful=False, trace_only=False, raw=False):
         """Rewind file iterator, and set options
 
-        If pid is set the the iterator will only return lines matching the pid
+        If pid is set the iterator will only return lines matching the pid
         If trace_only is True then the iterator will only return trace lines.
         if raw is set then all lines in the file are returned, even non-log
         lines.

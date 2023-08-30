@@ -77,7 +77,7 @@ class ThreadManager():
     """Class to manage running any method as multiple threads."""
 
     def __init__(self, method, timeout=None):
-        """Initialize a ThreadManager object with the the method to run as a thread.
+        """Initialize a ThreadManager object with the method to run as a thread.
 
         Args:
             method (callable): python method to execute in each thread

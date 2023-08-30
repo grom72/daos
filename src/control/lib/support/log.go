@@ -236,7 +236,7 @@ func ArchiveLogs(log logging.Logger, opts ...CollectLogsParams) error {
 		return err
 	}
 
-	// write to the the .tar.gz
+	// write to the .tar.gz
 	tarFileName := fmt.Sprintf("%s.tar.gz", opts[0].TargetFolder)
 	log.Debugf("Archiving the log folder %s", tarFileName)
 	fileToWrite, err := os.OpenFile(tarFileName, os.O_CREATE|os.O_RDWR, os.FileMode(0755))

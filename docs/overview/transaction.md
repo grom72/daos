@@ -75,7 +75,7 @@ In the initial implementation, the transaction API does not support reading
 your own uncommitted changes. In other words, transactional object or key-value
 modifications are invisible to the subsequent operations executed in the
 context of the same transaction. The transaction API is supported for all
-object types and can be combined with the the event and scheduler interface.
+object types and can be combined with the event and scheduler interface.
 
 The typical flow of a transaction is as follows:
 

@@ -1486,7 +1486,7 @@ struct vos_akey_data {
 		/** If ad_is_iod is false, it's an array of akeys */
 		daos_key_t	*ad_keys;
 	};
-	/** True if the the field above is an iod array */
+	/** True if the field above is an iod array */
 	bool		 ad_is_iod;
 };
 

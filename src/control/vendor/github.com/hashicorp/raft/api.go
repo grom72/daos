@@ -1081,7 +1081,7 @@ func (r *Raft) State() RaftState {
 // If receivers aren't ready for the signal, signals may drop and only the
 // latest leadership transition. For example, if a receiver receives subsequent
 // `true` values, they may deduce that leadership was lost and regained while
-// the the receiver was processing first leadership transition.
+// the receiver was processing first leadership transition.
 func (r *Raft) LeaderCh() <-chan bool {
 	return r.leaderCh
 }

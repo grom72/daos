@@ -52,7 +52,7 @@ ssh-copy-id root@wolf-666
 ### Ansible Inventory
 
 The [ansible inventory](https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html)
-list the different nodes of the the sub-cluster and gather them in different groups (which can
+list the different nodes of the sub-cluster and gather them in different groups (which can
 freely overlap) according to their roles in the functional test platform.
 - **daos\_dev**: This group should contain only one node.  This last one will be used for installing
   DAOS binaries and launch functional tests thanks to generated bash scripts.  Details on how to use

@@ -163,7 +163,7 @@ Like gRPC, RPC are serialized via protocol buffers.
 <a id="23"></a>
 ### CART
 
-[CART](https://github.com/daos-stack/cart) is a userspace function shipping
+[CART](cart/README.md) is a userspace function shipping
 library that provides low-latency high-bandwidth communications for the DAOS
 data plane. It supports RDMA capabilities and scalable collective operations.
 CART is built over [Mercury](https://github.com/mercury-hpc/mercury) and

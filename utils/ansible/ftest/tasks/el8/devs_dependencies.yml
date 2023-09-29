@@ -11,11 +11,11 @@
   remote_user: root
   command:
     dnf builddep --nobest --assumeyes "{{ playbook_dir }}/file/daos.spec"
-  args:
-    warn: false
-  register: dnf_result
-  become: true
-  changed_when: '"Nothing to do" not in dnf_result.stdout'
+#  args:
+#    warn: false
+#  register: dnf_result
+#  become: true
+#  changed_when: '"Nothing to do" not in dnf_result.stdout'
 
 - name: Install python development dependencies
   remote_user: root

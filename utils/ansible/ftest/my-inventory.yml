@@ -1,0 +1,20 @@
+# Sample inventory of a DAOS functional platform running on the wolf cluster
+
+all:
+  vars:
+    daos_runtime_dir: /opt/daos
+  children:
+    daos_dev:
+      vars:
+        daos_source_dir: /home/tgromadz/repos/daos
+        daos_ofi_interface: eth0
+      hosts:
+        wp163:
+    daos_servers:
+      vars:
+        daos_hugepages_nb: 8182
+      hosts:
+        wp163:
+    daos_clients:
+      hosts:
+        wp163:

@@ -270,7 +270,7 @@ post_provision_config_nodes() {
                      ompi argobots cart daos daos-client dpdk      \
                      fuse-libs libisa-l libpmemobj mercury mpich   \
                      pmix protobuf-c spdk libfabric libpmem        \
-                     libpmemblk munge-libs munge slurm             \
+                     munge-libs munge slurm             \
                      slurm-example-configs slurmctld slurm-slurmmd
     fi
 

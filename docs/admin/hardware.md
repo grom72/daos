@@ -21,7 +21,7 @@ servers.
 DAOS requires a 64-bit processor architecture and is primarily developed
 on Intel x86\_64 architecture. The DAOS software and the libraries it
 depends on (e.g., [ISA-L](https://github.com/intel/isa-l),
-[SPDK](https://pmem.io/pmdk/), [PMDK](https://spdk.io/), and
+[PMDK](https://github.com/pmem/pmdk/), [SPDK](https://spdk.io/), and
 [DPDK](https://www.dpdk.org/) can take
 advantage of Intel Intel Streaming SIMD (SSE) and Intel Advanced Vector (AVX) extensions.
 

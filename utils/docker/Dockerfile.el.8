@@ -166,3 +166,11 @@ WORKDIR /home/daos
 ARG DAOS_KEEP_SRC=no
 # Remove local copy
 RUN [ "$DAOS_KEEP_SRC" != "no" ] || rm -rf /home/daos/daos /home/daos/pre
+
+RUN dnf --nodocs install gdb cgdb
+
+RUN yum debuginfo-install glibc-2.28-225.el8.x86_64 hwloc-libs-2.2.0-3.el8.x86_64 \
+        libaio-0.3.112-1.el8.x86_64 libgcc-8.5.0-18.el8.x86_64 libibverbs-44.0-2.el8.1.x86_64 \
+        libnl3-3.7.0-1.el8.x86_64 librdmacm-44.0-2.el8.1.x86_64 libuuid-2.32.1-42.el8_8.x86_64 \
+        libyaml-0.1.7-5.el8.x86_64 lz4-libs-1.8.3-3.el8_4.x86_64 numactl-libs-2.0.12-13.el8.x86_64 \
+        protobuf-c-1.3.0-6.el8.x86_64

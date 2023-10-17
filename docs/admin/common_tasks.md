@@ -2,9 +2,9 @@
 
 This section describes some of the common tasks handled by admins at a high level. See [System Deployment](./deployment.md#system-deployment), [DAOS System Administration](./administration.md#daos-system-administration), and [Pool Operations](./pool_operations.md#pool-operations) for more detailed explanations about each step.
 
-## Single host setup with PMEM and NVMe
+## Single host setup with PMem and NVMe
 
-1. Check PMEM and NVMe are discovered by the system. Format and reset them.
+1. Check PMem and NVMe are discovered by the system. Format and reset them.
 2. Check network configuration. Check the `fabric_iface` you want to use is active.
 3. Install `daos-server` and `daos-client` RPMs.
 4. Generate certificate files.
@@ -14,7 +14,7 @@ This section describes some of the common tasks handled by admins at a high leve
 6. Check that the directory where the log files will be created exists. E.g.,
 `control_log_file`, `log_file` field in `engines` section.
 7. Start `daos_server`.
-8. Use `dmg config generate` to generate the config file that contains PMEM and
+8. Use `dmg config generate` to generate the config file that contains PMem and
 NVMe.
 9. Define the certificate files in the server config.
 10. Start server with the generated config file.
@@ -27,9 +27,9 @@ NVMe.
 17. Add a large file that's less than the 500MB pool size into the container.
 18. Call `dmg pool query` and check that the free size has declined.
 
-## Multiple host setup with PMEM and NVMe
+## Multiple host setup with PMem and NVMe
 
-1. Check PMEM and NVMe configurations are homogeneous. I.e., same number of
+1. Check PMem and NVMe configurations are homogeneous. I.e., same number of
 disks, size, address, etc.
 2. Check network configuration. Check that both the server and the client hosts
 can communicate with the network interface.
@@ -42,7 +42,7 @@ E.g., `access_points`, `bdev_class`.
 6. Check that the directory where the log files will be created exists. E.g.,
 `control_log_file`, `log_file` field in `engines` section.
 7. Start `daos_server`.
-8. Use `dmg config generate` to generate the config file that contains PMEM and
+8. Use `dmg config generate` to generate the config file that contains PMem and
 NVMe.
 9. Distribute the config file to `/etc/daos` of all hosts.
 10. Start server on all the hosts.
@@ -60,7 +60,7 @@ server hosts.
 
 ## Pool size management
 
-1. Start DAOS server with PMEM + NVMe and format.
+1. Start DAOS server with PMem + NVMe and format.
 2. Create a pool with a size percentage. For example,
 ```
 dmg pool create --size=50%
@@ -91,7 +91,7 @@ Adjust `transport_config` accordingly.
 
 ## Server config technique
 
-- Use the network interface, PMEM, and NVMe from the same NUMA Socket ID for
+- Use the network interface, PMem, and NVMe from the same NUMA Socket ID for
 the best performance.
 - Call `dmg storage scan --verbose` to see the list of devices and their Socket
 ID.

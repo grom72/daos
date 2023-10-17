@@ -35,7 +35,7 @@ class ConfigGenerateOutput(TestWithServers):
     def prepare_expected_data(self):
         """Prepare expected values.
 
-        Call dmg storage scan and network scan to collect expected values for NVMe, PMEM,
+        Call dmg storage scan and network scan to collect expected values for NVMe, PMem,
         and networking and create the following 4 dictionaries and 1 set.
 
         1. Create numa_node_to_pci_addrs. Key is socket_id from the output and value is a

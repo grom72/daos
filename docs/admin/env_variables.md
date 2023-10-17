@@ -41,7 +41,7 @@ Environment variables in this section only apply to the server side.
 |RDB\_AE\_MAX\_ENTRIES |Maximum number of entries in a Raft AppendEntries request. INTEGER. Default to 32.|
 |RDB\_AE\_MAX\_SIZE    |Maximum total size in bytes of all entries in a Raft AppendEntries request. INTEGER. Default to 1 MB.|
 |DAOS\_REBUILD         |Determines whether to start rebuilds when excluding targets. BOOL2. Default to true.|
-|DAOS\_MD\_CAP         |Size of a metadata pmem pool/file in MBs. INTEGER. Default to 128 MB.|
+|DAOS\_MD\_CAP         |Size of a metadata PMem pool/file in MBs. INTEGER. Default to 128 MB.|
 |DAOS\_START\_POOL\_SVC|Determines whether to start existing pool services when starting a daos\_server. BOOL. Default to true.|
 |CRT\_DISABLE\_MEM\_PIN|Disable memory pinning workaround on a server side. BOOL. Default to 0.|
 |DAOS\_SCHED\_PRIO\_DISABLED|Disable server ULT prioritizing. BOOL. Default to 0.|

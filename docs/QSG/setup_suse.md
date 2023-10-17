@@ -18,9 +18,9 @@ reference the [DAOS administration guide](https://docs.daos.io/v2.6/admin/hardwa
 
 This Guide requires a minimum of:
 
-- 1 server with PMEM and SSDs connected via infiniband storage network.
+- 1 server with PMem and SSDs connected via infiniband storage network.
 - 1 client node.
-- 1 admin node without pmem/ssd but on the infiniband storage network.
+- 1 admin node without PMem/ssd but on the infiniband storage network.
 - All nodes have a base openSUSE or SLES 15.3 installed.
 
 Install pdsh on the admin node
@@ -113,7 +113,7 @@ used by DAOS and NVME SSDs will be identified.
 	For OpenSUSE 15.3 installation, update ipmctl to the latest package available from
         https://build.opensuse.org/package/binaries/hardware:nvdimm/ipmctl/openSUSE_Leap_15.3
 
-1. Prepare the pmem devices on Server nodes:
+1. Prepare the PMem devices on Server nodes:
 
 		daos_server scm prepare
 

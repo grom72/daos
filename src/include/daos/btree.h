@@ -19,7 +19,7 @@
 /**
  * KV record of the btree.
  *
- * NB: could be PM data structure.
+ * NB: could be PMem data structure.
  */
 struct btr_record {
 	/**
@@ -52,7 +52,7 @@ struct btr_record {
 /**
  * Tree node.
  *
- * NB: could be PM data structure.
+ * NB: could be PMem data structure.
  */
 struct btr_node {
 	/** leaf, root etc */

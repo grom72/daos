@@ -66,7 +66,7 @@ enum {
 
 /**
  * Find an object in the cache \a occ and take its reference. If the object is
- * not in cache, this function will load it from PMEM pool or create it, then
+ * not in cache, this function will load it from PMem pool or create it, then
  * add it to the cache.
  *
  * \param occ		[IN]		Object cache, can be per cpu

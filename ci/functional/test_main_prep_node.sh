@@ -149,7 +149,7 @@ done
 # having -x just makes the console log harder to read.
 set +x
 if [ -e /sys/class/net/ib1 ]; then
-    # now check for pmem & NVMe drives when ib1 is present.
+    # now check for PMem & NVMe drives when ib1 is present.
     # ipmctl show -dimm should show an even number of drives, all healthy
     dimm_count=0
     while IFS= read -r line; do
@@ -157,12 +157,12 @@ if [ -e /sys/class/net/ib1 ]; then
         ((dimm_count++)) || true
     done < <(ipmctl show -dimm)
     if [ "$dimm_count" -eq 0 ] || [ $((dimm_count%2)) -ne 0 ]; then
-       # Not fatal, the PMEM DIMM should be replaced when downtime can be
+       # Not fatal, the PMem DIMM should be replaced when downtime can be
        # scheduled for this system.
-       dimm_message="FAIL: Wrong number $dimm_count healthy PMEM DIMMs seen."
+       dimm_message="FAIL: Wrong number $dimm_count healthy PMem DIMMs seen."
        mail_message+="$nl$dimm_message$nl$(ipmctl show -dimm)$nl"
     else
-       echo "OK: Found $dimm_count PMEM DIMMs."
+       echo "OK: Found $dimm_count PMem DIMMs."
     fi
     # Should have 2 regions 0x0000 and 0x0001, type AppDirect
     dimm_rcount=0
@@ -172,9 +172,9 @@ if [ -e /sys/class/net/ib1 ]; then
     done < <(ipmctl show -region)
 
     ((testruns++)) || true
-    testcases+="  <testcase name=\"PMEM DIMM Count Node $mynodenum\">${nl}"
+    testcases+="  <testcase name=\"PMem DIMM Count Node $mynodenum\">${nl}"
     if [ "$dimm_rcount" -ne 2 ]; then
-       nvme_message="FAIL: Found $dimm_rcount of DIMM PMEM regions, need 2."
+       nvme_message="FAIL: Found $dimm_rcount of DIMM PMem regions, need 2."
        nvme_message+="$nl$(ipmctl show -region)"
        mail_message+="$nl$nvme_message$nl"
         ((testfails++)) || true
@@ -183,7 +183,7 @@ if [ -e /sys/class/net/ib1 ]; then
     </error>$nl"
        result=1
     else
-       echo "OK: Found $dimm_rcount DIMM PMEM regions."
+       echo "OK: Found $dimm_rcount DIMM PMem regions."
     fi
     testcases+="  </testcase>$nl"
 
@@ -244,7 +244,7 @@ if [ -e /sys/class/net/ib1 ]; then
     ((testruns++)) || true
     testcases+="  <testcase name=\"NVMe lsblk Count Node $mynodenum\">${nl}"
     if [ "$lsblk_pmem" -ne "$dimm_rcount" ]; then
-       lsblk_pmem_msg="Only $lsblk_pmem of $dimm_rcount PMEM devices seen."
+       lsblk_pmem_msg="Only $lsblk_pmem of $dimm_rcount PMem devices seen."
        mail_message+="$nl$lsblk_pmem_msg$nl$(lsblk)$nl"
         ((testfails++)) || true
         testcases+="    <error message=\"Bad Count\" type=\"error\">
@@ -252,7 +252,7 @@ if [ -e /sys/class/net/ib1 ]; then
     </error>$nl"
        result=1
     else
-       echo "OK: All $dimm_rcount PMEM devices are in lsblk report."
+       echo "OK: All $dimm_rcount PMem devices are in lsblk report."
     fi
     testcases+="  </testcase>$nl"
 fi

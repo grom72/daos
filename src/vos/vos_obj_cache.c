@@ -7,7 +7,7 @@
  * Object cache for VOS OI table.
  * Object index is in Persistent memory. This cache in DRAM
  * maintains an LRU which is accessible in the I/O path. The object
- * index API defined for PMEM are used here by the cache..
+ * index API defined for PMem are used here by the cache..
  *
  * LRU cache implementation:
  * Simple LRU based object cache for Object index table

@@ -372,7 +372,7 @@ cancel:
  *
  * Object-cache:
  * ------------
- * In-memory object cache for object index in PMEM
+ * In-memory object cache for object index in PMem
  * Created once for standalone mode and once for every
  * TLS instance.
  */

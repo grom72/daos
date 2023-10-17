@@ -44,7 +44,7 @@ whereas in case B, it may ask for storage nearby some allocated compute nodes.
 
 Once successfully allocated, the master server will initialize a DAOS pool
 covering the allocated storage by formatting the VOS layout (i.e. fallocate(1)
-a PMEM file & create VOS super block) and starting the pool service which
+a PMem file & create VOS super block) and starting the pool service which
 will initiate the Raft engine in charge of the pool membership and metadata.
 At this point, the DAOS pool is ready to be handed off to the actual workflow.
 

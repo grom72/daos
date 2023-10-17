@@ -3265,7 +3265,7 @@ evt_common_insert(struct evt_context *tcx, struct evt_node *nd,
 		desc = evt_off2ptr(tcx, desc_off);
 		rc = evt_desc_log_add(tcx, desc);
 		if (rc != 0)
-			/* It is unnecessary to free the PMEM that will be
+			/* It is unnecessary to free the PMem that will be
 			 * dropped automatically when the PMDK transaction
 			 * is aborted.
 			 */

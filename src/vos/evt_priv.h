@@ -61,11 +61,11 @@ struct evt_context {
 	unsigned int			 tc_magic;
 	/** refcount on the context */
 	unsigned int			 tc_ref;
-	/** cached tree order (reduce PMEM access) */
+	/** cached tree order (reduce PMem access) */
 	uint8_t                          tc_order;
-	/** Cached maximum tree order (reduce PMEM access) */
+	/** Cached maximum tree order (reduce PMem access) */
 	uint8_t                          tc_max_order;
-	/** cached tree depth (reduce PMEM access) */
+	/** cached tree depth (reduce PMem access) */
 	uint16_t			 tc_depth;
 	/** number of credits for "drain" operation */
 	uint32_t                         tc_creds    : 30;
@@ -73,9 +73,9 @@ struct evt_context {
 	uint32_t                         tc_creds_on : 1;
 	/** cached number of bytes per entry */
 	uint32_t			 tc_inob;
-	/** cached tree feature bits (reduce PMEM access) */
+	/** cached tree feature bits (reduce PMem access) */
 	uint64_t			 tc_feats;
-	/** memory instance (PMEM or DRAM) */
+	/** memory instance (PMem or DRAM) */
 	struct umem_instance		 tc_umm;
 	/** pmemobj pool uuid */
 	uint64_t			 tc_pmempool_uuid;

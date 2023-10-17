@@ -268,7 +268,7 @@ being generated are NVMe SSD count, PCI address distribution or device NUMA affi
 
 - NUMA node count doesn't meet the `num-engines` requirement when `--use-tmpfs-scm` is specified.
 
-- PMem device count or NUMA affinity doesn't meet the `num-engines` requirement.
+- pmem device count or NUMA affinity doesn't meet the `num-engines` requirement.
 
 - NVMe device NUMA affinity imbalanced (or all bound to one socket).
 

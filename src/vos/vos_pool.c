@@ -572,7 +572,7 @@ vos_pmemobj_create(const char *path, uuid_t pool_id, const char *layout,
 	int			 rc, ret;
 
 	*ph = NULL;
-	/* always use PMEM mode for SMD */
+	/* always use PMem mode for SMD */
 	store.store_type = umempobj_get_backend_type();
 	if (flags & VOS_POF_SYSDB) {
 		store.store_type = DAOS_MD_PMEM;
@@ -654,7 +654,7 @@ vos_pmemobj_open(const char *path, uuid_t pool_id, const char *layout, unsigned 
 	int			 rc, ret;
 
 	*ph = NULL;
-	/* always use PMEM mode for SMD */
+	/* always use PMem mode for SMD */
 	store.store_type = umempobj_get_backend_type();
 	if (flags & VOS_POF_SYSDB) {
 		store.store_type = DAOS_MD_PMEM;
@@ -1133,7 +1133,7 @@ vos_pool_destroy_ex(const char *path, uuid_t uuid, unsigned int flags)
 	if (rc) {
 		if (errno == ENOENT)
 			D_GOTO(exit, rc = 0);
-		D_ERROR("Failure deleting file from PMEM: %s\n",
+		D_ERROR("Failure deleting file from PMem: %s\n",
 			strerror(errno));
 	}
 exit:
@@ -1591,7 +1591,7 @@ vos_pool_ctl(daos_handle_t poh, enum vos_pool_opc opc, void *param)
 	return 0;
 }
 
-/** Convenience function to return address of a bio_addr in pmem.  If it's a hole or NVMe address,
+/** Convenience function to return address of a bio_addr in PMem.  If it's a hole or NVMe address,
  *  it returns NULL.
  */
 const void *

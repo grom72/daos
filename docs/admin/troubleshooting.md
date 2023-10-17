@@ -477,10 +477,10 @@ force an immediate cache refresh.
 
 !!! WARNING : Please be careful and use this tool under supervision of DAOS support team.
 
-In case of PMEM device restored to healthy state, the ext4 filesystem
-created on each PMEM devices may need to verified and repaired if needed.
+In case of pmem device restored to healthy state, the ext4 filesystem
+created on each pmem devices may need to verified and repaired if needed.
 
-!!! Make sure that PMEM is not in use and not mounted while doing check or repair.
+!!! Make sure that PMem is not in use and not mounted while doing check or repair.
 
 #### Use dmg command to stop the daos engines.
 

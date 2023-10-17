@@ -359,7 +359,7 @@ struct vos_irec_df {
 
 /**
  * VOS object, assume all objects are KV store...
- * NB: PMEM data structure.
+ * NB: PMem data structure.
  */
 struct vos_obj_df {
 	daos_unit_oid_t			vo_id;

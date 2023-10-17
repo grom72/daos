@@ -51,7 +51,7 @@ struct vos_tls {
 	struct vos_ts_table		*vtl_ts_table;
 	/** profile for standalone vos test */
 	struct daos_profile		*vtl_dp;
-	/** In-memory object cache for the PMEM object table */
+	/** In-memory object cache for the PMem object table */
 	struct daos_lru_cache		*vtl_ocache;
 	/** pool open handle hash table */
 	struct d_hash_table		*vtl_pool_hhash;

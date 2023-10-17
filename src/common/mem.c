@@ -616,7 +616,7 @@ umem_off2id(const struct umem_instance *umm, umem_off_t umoff)
  *  \param	umm[IN]		The umem pool instance
  *  \param	oid[in]		The oid to convert
  *
- *  \return	The offset in the PMEM pool.
+ *  \return	The offset in the PMem pool.
  */
 static inline umem_off_t
 umem_id2off(const struct umem_instance *umm, PMEMoid oid)

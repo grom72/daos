@@ -14,7 +14,7 @@
 |CPU|Central Processing Unit|
 |Daemon|A process offering system-level resources.|
 |[DAOS](https://docs.daos.io/)|Distributed Asynchronous Object Storage |
-|PMEM|Intel Optane Persistent Memory|
+|PMem|Persistent Memory - e.g. Intel Optane Persistent Memory|
 |DPDK|Data Plane Development Kit|
 |dRPC|DAOS Remote Procedure Call|
 |[gRPC](https://grpc.io/)|gRPC Remote Procedure Calls|

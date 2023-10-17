@@ -521,7 +521,7 @@ svt_rec_alloc_common(struct btr_instance *tins, struct btr_record *rec,
 	rc = vos_dtx_register_record(&tins->ti_umm, rec->rec_off,
 				     DTX_RT_SVT, &irec->ir_dtx);
 	if (rc != 0)
-		/* It is unnecessary to free the PMEM that will be dropped
+		/* It is unnecessary to free the PMem that will be dropped
 		 * automatically when the PMDK transaction is aborted.
 		 */
 		return rc;

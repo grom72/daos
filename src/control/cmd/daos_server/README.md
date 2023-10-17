@@ -69,7 +69,7 @@ node.
 Examples for NVMe and AIO (emulation) classes including config file syntax can
 be found in the [examples folder](/utils/config/examples).
 
-### SCM/pmem storage
+### SCM/PMem storage
 
 Parameters prefixed with `scm_` in the per-engine section of the config file
 determine how SCM storage will be assigned for use by DAOS on the storage node.

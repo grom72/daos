@@ -92,7 +92,7 @@ daos-server RPM.
 In this section, PMem (Intel(R) Optane(TM) persistent memory) will be prepared and configured to be
 used by DAOS and NVME SSDs will be identified.
 
-1. Prepare the pmem devices on Server nodes:
+1. Prepare the PMem devices on Server nodes:
 
 		daos_server scm prepare
 

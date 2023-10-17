@@ -5,7 +5,7 @@
  */
 /**
  * Server-side management API offering the following functionalities:
- * - manage storage allocation (PMEM files, disk partitions, ...)
+ * - manage storage allocation (PMem files, disk partitions, ...)
  * - initialize pool and target service
  * - provide fault domains
  */

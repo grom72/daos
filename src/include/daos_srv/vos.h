@@ -8,7 +8,7 @@
  * These APIs will help build a versioned store with key value objects.
  * The KV index is composed of a {distribution-key, attribute-key, record}.
  * These APIs provide ways to create, delete, search and enumerate
- * such multiversion objects over PMEM.
+ * such multiversion objects over PMem.
  */
 
 #ifndef __VOS_API_H__

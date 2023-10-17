@@ -21,7 +21,7 @@ This document contains the following sections:
     - <a href="#34">DAOS Services</a>
 - <a href="#4">Software compatibility</a>
     - <a href="#41">Protocol Compatibility</a>
-    - <a href="#42">PM Schema Compatibility and Upgrade</a>
+    - <a href="#42">PMem Schema Compatibility and Upgrade</a>
 
 <a id="1"></a>
 ## DAOS Components
@@ -295,7 +295,7 @@ to the control API. Similarly, connection from clients running a protocol
 version incompatible with the targets will return an error.
 
 <a id="42"></a>
-### PM Schema Compatibility and Upgrade
+### PMem Schema Compatibility and Upgrade
 
 The schema of persistent data structures may evolve from time to time to
 fix bugs, add new optimizations or support new features. To that end,

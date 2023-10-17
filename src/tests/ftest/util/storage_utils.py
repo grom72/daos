@@ -205,10 +205,10 @@ class StorageDevice():
 
     @property
     def is_pmem(self):
-        """Is this a PMEM device.
+        """Is this a PMem device.
 
         Returns:
-            bool: True if this a PMEM device; False otherwise.
+            bool: True if this a PMem device; False otherwise.
 
         """
         return self.storage_class == "PMEM"
@@ -663,16 +663,16 @@ class StorageInfo():
         if tier_0_type == self.TIER_0_TYPES[0] and self.pmem_devices:
             # Sort the detected devices and place then in lists by NUMA node
             numa_devices = self._get_numa_devices(self.pmem_devices)
-            self._log.debug('  PMEM numa_devices:   %s', numa_devices)
+            self._log.debug('  PMem numa_devices:   %s', numa_devices)
 
             # Interleave the devices for bdev_list distribution.
             interleaved = self._get_interleaved(engines, numa_devices)
-            self._log.debug('  PMEM interleaved:    %s', interleaved)
+            self._log.debug('  PMem interleaved:    %s', interleaved)
 
             if len(interleaved) >= engines:
                 for engine in range(engines):
                     pmem_list[engine] = interleaved.pop(0)
-            self._log.debug('  PMEM pmem_list:      %s', pmem_list)
+            self._log.debug('  PMem pmem_list:      %s', pmem_list)
 
         if self.controller_devices or self.disk_devices:
             # Sort the detected devices and place then in lists by NUMA node

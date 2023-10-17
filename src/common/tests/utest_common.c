@@ -177,7 +177,7 @@ utest_utx_destroy(struct utest_context *utx)
 		return 0;
 	}
 
-	/* Ok, PMEM is a bit more complicated */
+	/* Ok, PMem is a bit more complicated */
 	rc = utest_tx_begin(utx);
 	if (rc != 0) {
 		D_ERROR("Problem in tx begin\n");

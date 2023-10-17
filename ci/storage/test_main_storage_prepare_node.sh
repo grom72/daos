@@ -52,10 +52,10 @@ if ipmctl show -dimm; then
     fi
 else
     if ip addr show ib1; then
-        # All of our CI nodes with two ib adapters should have PMEM DIMMs
-        echo 'No PMEM DIMM devices found on CI node!'
+        # All of our CI nodes with two ib adapters should have PMem DIMMs
+        echo 'No PMem DIMM devices found on CI node!'
         exit 1
     else
-        echo 'No PMEM DIMM devices found!'
+        echo 'No PMem DIMM devices found!'
     fi
 fi

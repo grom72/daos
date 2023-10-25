@@ -81,3 +81,7 @@ if [ -e /etc/fedora-release ]; then
 else
         dnf install maven
 fi
+
+dnf --nodocs install \
+    gdb-gdbserver \
+    cgdb

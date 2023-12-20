@@ -2,12 +2,16 @@ name: Trivy checking
 
 on:
   workflow_dispatch:
+  schedule:
+    # run this job at 23:00 UTC every other day
+    - cron: '0 23 */2 * *'
   push:
     branches:
       - master
+      - 'feature/*'
+      - 'release/*'
   pull_request:
-    paths:
-      - 'utils/cq/requirements.txt'
+
 
 jobs:
   upgrade-check:
@@ -27,5 +31,14 @@ jobs:
           sudo apt-get update
           sudo apt-get install trivy
 
+      - name: Generate trivy report
+        run: |
+          trivy fs --list-all-pkgs --exit-code 0 --format template --template "@./ci/csv.tpl" \
+            --output trivy-report-daos.$(git branch --show-current | sed -e 's/release\///').csv .
+
+      - uses: actions/upload-artifact@v4
+        with:
+          path: trivy-report-daos.*
+
       - name: Scan with trivy
-        run: trivy fs .
+        run: trivy fs --list-all-pkgs --exit-code 1 .

@@ -17,10 +17,16 @@ jobs:
   upgrade-check:
     name: Trivy checking
     runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        branch: [master, release/2.4]
+      fail-fast: false
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          ref: ${{ matrix.branch }}
 
       - name: Install trivy package
         run: |
@@ -34,11 +40,12 @@ jobs:
       - name: Generate trivy report
         run: |
           trivy fs -c ci/trivy/trivy.yaml \
-           --output trivy-report-daos.$(git branch --show-current | sed -e 's/release\///').csv .
+           --output trivy-report-daos.$(echo ${{ matrix.branch }} | sed -e 's/release\///').txt .
 
       - uses: actions/upload-artifact@v4
         with:
           path: trivy-report-daos.*
+          name: trivy-report-daos.$(echo ${{ matrix.branch }} | sed -e 's/release\///')
 
       - name: Scan with trivy
         run: trivy fs -c ci/trivy/trivy.yaml --exit-code 1 .

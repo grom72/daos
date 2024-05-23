@@ -34,4 +34,4 @@ jobs:
           sudo apt-get install trivy
 
       - name: Scan with trivy
-        run: ci/trivy/trivy.sh
+        run: ci/trivy/trivy.sh table

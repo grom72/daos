@@ -19,7 +19,7 @@ db:
   repository: ghcr.io/aquasecurity/trivy-db
   skip-update: false
 debug: false
-dependency-tree: false
+dependency-tree: true
 exit-code: 0
 format: template
 generate-default-config: false
@@ -229,11 +229,8 @@ scan:
   skip-dirs:
     ./src/client/java/hadoop-daos
   skip-files: []
-  #  - ./src/client/java/hadoop-daos/pom.xml
-  #  - ./src/server/java/hadoop-daos/pom.xml
-  #  - ../../src/client/java/hadoop-daos/pom.xml
-  #  - ../../src/server/java/hadoop-daos/pom.xml
   slow: false
+  show-suppressed: true
 secret:
   config: trivy-secret.yaml
 server:

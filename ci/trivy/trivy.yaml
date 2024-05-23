@@ -227,11 +227,11 @@ scan:
     - secret
   # ignore all hadoop dependencies
   skip-dirs:
-    - ./src/client/java/hadoop-daos/
-    - ./src/server/java/hadoop-daos/
   skip-files:
     - ./src/client/java/hadoop-daos/pom.xml
     - ./src/server/java/hadoop-daos/pom.xml
+    - ../../src/client/java/hadoop-daos/pom.xml
+    - ../../src/server/java/hadoop-daos/pom.xml
   slow: false
 secret:
   config: trivy-secret.yaml

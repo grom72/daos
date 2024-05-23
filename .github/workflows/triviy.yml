@@ -59,5 +59,4 @@ jobs:
           name: trivy-report-daos.${{ steps.gen_extension.outputs.EXTENSION }}
 
       - name: Scan with trivy
-        run: trivy fs -c ci/trivy/trivy.yaml --dependency-tree -f table --show-suppressed \
-          --ignorefile ./src/client/java/hadoop-daos/pom.xml --exit-code 1 .
+        run: ci/trivy/trivy.sh

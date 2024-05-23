@@ -174,7 +174,7 @@ license:
     - CC0-1.0
     - Unlicense
     - 0BSD
-list-all-pkgs: true
+list-all-pkgs: false
 misconfiguration:
   cloudformation:
     params: []
@@ -184,16 +184,16 @@ misconfiguration:
     set-string: []
     values: []
   include-non-failures: false
-  policy-bundle-repository: ghcr.io/aquasecurity/trivy-policies:0
-  reset-policy-bundle: false
-  scanners:
-    - azure-arm
-    - cloudformation
-    - dockerfile
-    - helm
-    - kubernetes
-    - terraform
-    - terraformplan
+  check-bundle-repository: ghcr.io/aquasecurity/trivy-policies:0
+  reset-checks-bundle: false
+  # scanners:
+  #  - azure-arm
+  #  - cloudformation
+  #  - dockerfile
+  #  - helm
+  #  - kubernetes
+  #  - terraform
+  #  - terraformplan
   terraform:
     exclude-downloaded-modules: false
     vars: []

@@ -39,24 +39,5 @@ jobs:
           sudo apt-get update
           sudo apt-get install trivy
 
-      - name: Generate trivy report file extension
-        id: gen_extension
-        run: |
-          EXTENSION=$(echo "${{ matrix.branch }}" | sed -e 's/release\///')
-          echo "EXTENSION=$EXTENSION" >> $GITHUB_OUTPUT
-
-      - name: Generate trivy report
-        run: |
-          trivy fs -c ci/trivy/trivy.yaml \
-           --output trivy-report-daos.${{ steps.gen_extension.outputs.EXTENSION }}.txt .
-
-      - name: Artifactory upload
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
-        env:
-          EXTENSION: ${{ steps.gen_extension.outputs.EXTENSION }}
-        with:
-          path: trivy-report-daos.*
-          name: trivy-report-daos.${{ steps.gen_extension.outputs.EXTENSION }}
-
       - name: Scan with trivy
         run: ci/trivy/trivy.sh

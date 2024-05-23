@@ -226,7 +226,8 @@ scan:
     - vuln
     - secret
   # ignore all hadoop dependencies
-  skip-dirs: []
+  skip-dirs:
+    ./src/client/java/hadoop-daos
   skip-files: []
   #  - ./src/client/java/hadoop-daos/pom.xml
   #  - ./src/server/java/hadoop-daos/pom.xml

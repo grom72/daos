@@ -20,8 +20,8 @@ jobs:
     name: Trivy checking
     runs-on: ubuntu-22.04
     strategy:
-      matrix:
-        branch: [trivy, master, release/2.6]
+      # matrix:
+      # branch: [trivy, master, release/2.6]
       fail-fast: false
 
     steps:

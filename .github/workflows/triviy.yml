@@ -1,4 +1,4 @@
-name: Trivy checking
+name: Trivy scan
 
 on:
   workflow_dispatch:
@@ -53,4 +53,4 @@ jobs:
           name: trivy-report-daos.${{ steps.gen_extension.outputs.EXTENSION }}
 
       - name: Scan with trivy
-        run: ci/trivy/trivy.sh table
+        run: trivy fs -c ci/trivy/trivy.yaml -f table --exit-code 1 .

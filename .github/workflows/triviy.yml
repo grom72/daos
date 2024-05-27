@@ -5,12 +5,6 @@ on:
   schedule:
     # run this job at 23:00 UTC every other day
     - cron: '0 23 */2 * *'
-  push:
-    branches:
-      - master
-      - 'feature/*'
-      - 'release/*'
-      - 'trivy'
   pull_request:
 
 permissions: {}
@@ -19,10 +13,15 @@ jobs:
   trivy-check:
     name: Trivy checking
     runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        branch: [trivy, master, release/2.4, release/2.6]
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.
+        with:
+          ref: ${{ matrix.branch }}
 
       - name: Install trivy package
         run: |

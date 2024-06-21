@@ -24,7 +24,7 @@ exit-code: 0
 format: template
 generate-default-config: false
 ignore-policy: ""
-ignorefile: ./ci/trivy/.trivyignore
+ignorefile: ./utils/trivy/.trivyignore
 include-dev-deps: false
 insecure: false
 license:
@@ -240,7 +240,7 @@ severity:
   - MEDIUM
   - HIGH
   - CRITICAL
-template: '@./ci/trivy/csv.tpl'
+template: '@./utils/trivy/csv.tpl'
 timeout: 5m0s
 version: false
 vulnerability:

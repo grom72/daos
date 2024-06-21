@@ -30,6 +30,16 @@ jobs:
         with:
           ref: ${{ matrix.branch }}
 
+      - name: Checkout latest trivy configuration
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+        with:
+          ref: master
+          path: trivy
+
+      - name: Update trivy configuration
+        run: |
+          cp -r -f ./trivy/utils/trivy/*.* ./utils/trivy
+
       - name: Install trivy package
         run: |
           sudo apt-get install wget apt-transport-https gnupg lsb-release

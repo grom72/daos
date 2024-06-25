@@ -53,7 +53,7 @@ jobs:
         id: gen_extension
         run: |
           EXTENSION=$(echo "${{ github.ref }}" | sed -e 's/release\///' -e's/\//_/' )
-          if [ -z "${VAR}" ]; then
+          if [ -z "${EXTENSION}" ]; then
             EXTENSION=$(echo "${{ github.base_ref }}" | sed -e 's/release\///' -e's/\//_/' )
           fi
           echo "EXTENSION=$EXTENSION" >> $GITHUB_OUTPUT

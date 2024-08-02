@@ -34,6 +34,14 @@ CVE-2024-25638
 
 ## Ignore DNSJava-related issues
 ## GHSA-crjg-w57m-rqqf,MEDIUM,,"DNSJava vulnerable to KeyTrap - Denial-of-Service Algorithmic Complexity Attacks","dnsjava:dnsjava","2.1.7","3.6.0",https://github.com/advisories/GHSA-crjg-w57m-rqqf
-# GHSA-crjg-w57m-rqqf
+GHSA-crjg-w57m-rqqf
 ## GHSA-mmwx-rj87-vfgr,MEDIUM,,"DNSJava affected by KeyTrap - NSEC3 closest encloser proof can exhaust CPU resources","dnsjava:dnsjava","2.1.7","3.6.0",https://github.com/advisories/GHSA-mmwx-rj87-vfgr
-# GHSA-mmwx-rj87-vfgr
+GHSA-mmwx-rj87-vfgr
+## CVE-2023-33201,MEDIUM,5.3,"bouncycastle: potential  blind LDAP injection attack using a self-signed certificate","org.bouncycastle:bcprov-jdk15on","1.70","",https://avd.aquasec.com/nvd/cve-2023-33201
+CVE-2023-33201
+## CVE-2024-29857,MEDIUM,,"org.bouncycastle: Importing an EC certificate with crafted F2m parameters may lead to Denial of Service","org.bouncycastle:bcprov-jdk15on","1.70","1.78",https://avd.aquasec.com/nvd/cve-2024-29857
+CVE-2024-29857
+## CVE-2024-30171,MEDIUM,,"bc-java: BouncyCastle vulnerable to a timing variant of Bleichenbacher (Marvin Attack)","org.bouncycastle:bcprov-jdk15on","1.70","1.78",https://avd.aquasec.com/nvd/cve-2024-30171
+CVE-2024-30171
+## CVE-2024-30172,MEDIUM,,"org.bouncycastle:bcprov-jdk18on: Infinite loop in ED25519 verification in the ScalarUtil class","org.bouncycastle:bcprov-jdk15on","1.70","1.78",https://avd.aquasec.com/nvd/cve-2024-30172
+CVE-2024-30172

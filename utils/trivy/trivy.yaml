@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: BSD-2-Clause-Patent
+# Copyright (c) 2024 Intel Corporation.
+
 cache:
   backend: fs
   dir:
@@ -11,10 +14,10 @@ config: trivy.yaml
 db:
   download-java-only: false
   download-only: false
-  java-repository: ghcr.io/aquasecurity/trivy-java-db
+  java-repository: public.ecr.aws/aquasecurity/trivy-java-db ghcr.io/aquasecurity/trivy-java-db
   java-skip-update: false
   no-progress: false
-  repository: ghcr.io/aquasecurity/trivy-db
+  repository: public.ecr.aws/aquasecurity/trivy-db ghcr.io/aquasecurity/trivy-db
   skip-update: false
 debug: false
 dependency-tree: true

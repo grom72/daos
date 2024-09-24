@@ -1,8 +1,19 @@
+# SPDX-License-Identifier: BSD-2-Clause-Patent
+# Copyright (C) 2024 Intel Corporation.
+
 name: Trivy scan
 
 on:
+  schedule:
+    - cron: '45 8 * * *'
+
   pull_request:
     branches: ["master", "release/**"]
+    paths:
+      - '**/go.mod'
+      - '**/pom.xml'
+      - '**/requirements.txt'
+      - '**/*trivy*'
 
 # Declare default permissions as nothing.
 permissions: {}

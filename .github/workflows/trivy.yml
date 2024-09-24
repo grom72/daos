@@ -1,7 +1,12 @@
+# SPDX-License-Identifier: BSD-2-Clause-Patent
+# Copyright (c) 2024 Intel Corporation.
+
 name: Trivy scan
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '45 8 * * *'
   push:
     branches: ["master", "release/**"]
   pull_request:
@@ -12,13 +17,15 @@ permissions: {}
 
 jobs:
   build:
-    name: Build
+    name: Scan with Trivy
     runs-on: ubuntu-20.04
+    permissions:
+      security-events: write
     steps:
       - name: Checkout code
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
 
-      - name: Run Trivy vulnerability scanner in repo mode
+      - name: Run Trivy vulnerability scanner in filesystem mode
         uses: aquasecurity/trivy-action@6e7b7d1fd3e4fef0c5fa8cce1229c54b2c9bd0d8  # 0.24.0
         with:
           scan-type: 'fs'
@@ -43,7 +50,7 @@ jobs:
             utils/trivy/trivy.yaml
           sed -i 's/format: template/format: sarif/g' utils/trivy/trivy.yaml
 
-      - name: Run Trivy vulnerability scanner in repo mode
+      - name: Run Trivy vulnerability scanner in filesystem mode
         uses: aquasecurity/trivy-action@6e7b7d1fd3e4fef0c5fa8cce1229c54b2c9bd0d8  # 0.24.0
         with:
           scan-type: 'fs'
@@ -55,6 +62,13 @@ jobs:
         # 3.25.15 (v3)
         with:
           sarif_file: 'trivy-results.sarif'
+          category: my-analysis-tool
+
+      - name: Upload the report to the GitHub artifact store
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808  # v4.3.3
+        with:
+          path: 'trivy-results.sarif'
+          name: trivy-report-daos-sarif
 
       - name: Adjust config file to show and validate scan results
         run: |
@@ -62,7 +76,7 @@ jobs:
           sed -i 's/format: sarif/format: table/g' utils/trivy/trivy.yaml
           sed -i 's/exit-code: 0/exit-code: 1/g' utils/trivy/trivy.yaml
 
-      - name: Run Trivy vulnerability scanner in repo mode
+      - name: Run Trivy vulnerability scanner in filesystem mode
         uses: aquasecurity/trivy-action@6e7b7d1fd3e4fef0c5fa8cce1229c54b2c9bd0d8  # 0.24.0
         with:
           scan-type: 'fs'

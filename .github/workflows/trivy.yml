@@ -7,8 +7,10 @@ on:
   schedule:
     - cron: '45 8 * * *'
 
-  pull_request:
+  push:
     branches: ["master", "release/**"]
+
+  pull_request:
     paths:
       - '**/go.mod'
       - '**/pom.xml'

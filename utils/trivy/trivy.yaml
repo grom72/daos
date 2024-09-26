@@ -21,7 +21,7 @@ dependency-tree: true
 exit-code: 0
 generate-default-config: false
 ignore-policy: ""
-ignorefile: ./utils/trivy/.trivyignore
+ignorefile:
 include-dev-deps: false
 insecure: false
 license:

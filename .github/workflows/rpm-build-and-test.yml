@@ -529,7 +529,7 @@ jobs:
       - name: Publish test results
         if: (!cancelled()) && (success() || failure()) &&
             steps.run-test.outcome != 'skipped'
-        uses: EnricoMi/publish-unit-test-result-action@v2
+        uses: EnricoMi/publish-unit-test-result-action@v2.7
         with:
           check_name: ${{ env.STAGE_NAME }} Test Results (old)
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -763,7 +763,7 @@ jobs:
       - name: Publish test results
         if: (!cancelled()) && (success() || failure()) &&
             steps.run-test.outcome != 'skipped'
-        uses: EnricoMi/publish-unit-test-result-action@v2
+        uses: EnricoMi/publish-unit-test-result-action@v2.7
         with:
           check_name: ${{ env.STAGE_NAME }} Test Results (old)
           github_token: ${{ secrets.GITHUB_TOKEN }}

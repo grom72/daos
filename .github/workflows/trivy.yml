@@ -55,6 +55,7 @@ jobs:
         # 3.25.15 (v3)
         with:
           sarif_file: 'trivy-results.sarif'
+          ref: release
 
       - name: Adjust config file to show and validate scan results
         run: |

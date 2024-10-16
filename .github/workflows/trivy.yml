@@ -14,9 +14,18 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-20.04
+
+    permissions:
+      actions: read
+      security-events: write
+
     steps:
       - name: Checkout code
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+
+      - name: Echo GITHUB_SHA
+        run: |
+          echo ${GITHUB_SHA}
 
       - name: Run Trivy vulnerability scanner in repo mode
         uses: aquasecurity/trivy-action@6e7b7d1fd3e4fef0c5fa8cce1229c54b2c9bd0d8  # 0.24.0
@@ -51,10 +60,12 @@ jobs:
           trivy-config: 'utils/trivy/trivy.yaml'
 
       - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@afb54ba388a7dca6ecae48f608c4ff05ff4cc77a
-        # 3.25.15 (v3)
+        uses: github/codeql-action/upload-sarif@cf5b0a9041d3c1d336516f1944c96d96598193cc
+        # 3.26.10 (v3)
         with:
           sarif_file: 'trivy-results.sarif'
+          ref: release
+          sha: 3443
 
       - name: Adjust config file to show and validate scan results
         run: |

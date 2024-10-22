@@ -16,7 +16,7 @@ CVE-2024-25638
 
 ## Ignored hadoop 3.4.0 related CVE
 ## CVE-2024-47561,CRITICAL,,"apache-avro: Schema parsing may trigger Remote Code Execution (RCE)","org.apache.avro:avro","1.9.2","1.11.4",https://avd.aquasec.com/nvd/cve-2024-47561
-CVE-2024-47561
+## CVE-2024-47561
 ## CVE-2023-33201,MEDIUM,5.3,"bouncycastle: potential  blind LDAP injection attack using a self-signed certificate","org.bouncycastle:bcprov-jdk15on","1.70","",https://avd.aquasec.com/nvd/cve-2023-33201
 CVE-2023-33201
 ## CVE-2024-29857,MEDIUM,,"org.bouncycastle: Importing an EC certificate with crafted F2m parameters may lead to Denial of Service","org.bouncycastle:bcprov-jdk15on","1.70","1.78",https://avd.aquasec.com/nvd/cve-2024-29857

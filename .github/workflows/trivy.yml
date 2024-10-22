@@ -35,7 +35,7 @@ permissions: {}
 
 jobs:
   build:
-    name: Build
+    name: Scan with Trivy
     runs-on: ubuntu-20.04
     permissions:
       security-events: write

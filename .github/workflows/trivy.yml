@@ -20,6 +20,9 @@ jobs:
     name: Update Trivy DB
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+
       - name: Setup oras
         uses: oras-project/setup-oras@v1
 
@@ -33,6 +36,14 @@ jobs:
         with:
           path: ${{ github.workspace }}/.cache/trivy
           key: cache-trivy-${{ steps.date.outputs.date }}
+
+      - if: ${{ steps.db-downloaded.outputs.cache-hit != 'true' && github.ref_name != 'master' }}
+        name: Exit
+        run: |
+          gh run cancel ${{ github.run_id }}
+          gh run watch ${{ github.run_id }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - if: ${{ steps.db-downloaded.outputs.cache-hit != 'true' }}
         name: Download and extract the vulnerability DB

@@ -14,10 +14,10 @@ config: trivy.yaml
 db:
   download-java-only: false
   download-only: false
-  java-repository: public.ecr.aws/aquasecurity/trivy-java-db ghcr.io/aquasecurity/trivy-java-db
+  java-repository: ghcr.io/aquasecurity/trivy-java-db
   java-skip-update: false
   no-progress: false
-  repository: public.ecr.aws/aquasecurity/trivy-db ghcr.io/aquasecurity/trivy-db
+  repository: ghcr.io/aquasecurity/trivy-db
   skip-update: false
 debug: false
 dependency-tree: true

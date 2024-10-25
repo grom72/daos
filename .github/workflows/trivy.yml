@@ -145,3 +145,8 @@ jobs:
         env:
           TRIVY_SKIP_DB_UPDATE: ${{ steps.db-downloaded.outputs.cache-hit == 'true' }}
           TRIVY_SKIP_JAVA_DB_UPDATE: ${{ steps.db-downloaded.outputs.cache-hit == 'true' }}
+
+      - if: ${{ steps.db-downloaded.outputs.cache-hit != 'true' }}
+        name: Clean cache to avoid cache overwriting
+        run: |
+          rm -rf ${{ github.workspace }}/.cache/trivy

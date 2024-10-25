@@ -86,6 +86,7 @@ jobs:
           scan-type: 'fs'
           scan-ref: '.'
           trivy-config: 'utils/trivy/trivy.yaml'
+          cache: ${{ steps.db-downloaded.outputs.cache-hit == 'true' }}
         env:
           TRIVY_SKIP_DB_UPDATE: ${{ steps.db-downloaded.outputs.cache-hit == 'true' }}
           TRIVY_SKIP_JAVA_DB_UPDATE: ${{ steps.db-downloaded.outputs.cache-hit == 'true' }}
@@ -115,6 +116,7 @@ jobs:
           scan-ref: '.'
           trivy-config: 'utils/trivy/trivy.yaml'
           skip-setup-trivy: true
+          cache: ${{ steps.db-downloaded.outputs.cache-hit == 'true' }}
         env:
           TRIVY_SKIP_DB_UPDATE: ${{ steps.db-downloaded.outputs.cache-hit == 'true' }}
           TRIVY_SKIP_JAVA_DB_UPDATE: ${{ steps.db-downloaded.outputs.cache-hit == 'true' }}
@@ -138,6 +140,7 @@ jobs:
           scan-ref: '.'
           trivy-config: 'utils/trivy/trivy.yaml'
           skip-setup-trivy: true
+          cache: ${{ steps.db-downloaded.outputs.cache-hit == 'true' }}
         env:
           TRIVY_SKIP_DB_UPDATE: ${{ steps.db-downloaded.outputs.cache-hit == 'true' }}
           TRIVY_SKIP_JAVA_DB_UPDATE: ${{ steps.db-downloaded.outputs.cache-hit == 'true' }}

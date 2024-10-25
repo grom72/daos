@@ -79,6 +79,7 @@ jobs:
         with:
           path: ${{ github.workspace }}/.cache/trivy
           key: cache-trivy-${{ steps.date.outputs.date }}
+          lookup-only: true
 
       - name: Run Trivy vulnerability scanner in filesystem mode (table format)
         uses: aquasecurity/trivy-action@915b19bbe73b92a6cf82a1bc12b087c9a19a5fe2  # 0.28.0

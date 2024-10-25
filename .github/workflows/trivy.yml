@@ -20,45 +20,47 @@ jobs:
     name: Update Trivy DB
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout code to see if we run on default (master) branch
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
 
       - name: Setup oras
-        uses: oras-project/setup-oras@v1
+        uses: oras-project/setup-oras@9c92598691bfef1424de2f8fae81941568f5889c  # v1.21
 
-      - name: Get current date
+      - name: Get current date to create cache entry
         id: date
         run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
-      - id: db-downloaded
-        name: DB cached already
-        uses: actions/cache@v4
+      - name: Check if Trivy DB cached already
+        id: db-downloaded
+        uses: actions/cache/restore@6849a6489940f00c2f30c0fb92c6274307ccb58a  # v4.1.2
         with:
           path: ${{ github.workspace }}/.cache/trivy
           key: cache-trivy-${{ steps.date.outputs.date }}
+          lookup-only: true
 
-      - if: ${{ steps.db-downloaded.outputs.cache-hit != 'true' && github.ref_name == 'master' }}
-        name: Download and extract the vulnerability DB
+      - name: Download and extract the vulnerability DB
+        if: ${{ steps.db-downloaded.outputs.cache-hit != 'true' && github.ref_name == 'master' }}
         run: |
           mkdir -p $GITHUB_WORKSPACE/.cache/trivy/db
           oras pull ghcr.io/aquasecurity/trivy-db:2
           tar -xzf db.tar.gz -C $GITHUB_WORKSPACE/.cache/trivy/db
           rm db.tar.gz
 
-      - if: ${{ steps.db-downloaded.outputs.cache-hit != 'true' && github.ref_name == 'master' }}
-        name: Download and extract the Java DB
+      - name: Download and extract the Java DB
+        if: ${{ steps.db-downloaded.outputs.cache-hit != 'true' && github.ref_name == 'master' }}
         run: |
           mkdir -p $GITHUB_WORKSPACE/.cache/trivy/java-db
           oras pull ghcr.io/aquasecurity/trivy-java-db:1
           tar -xzf javadb.tar.gz -C $GITHUB_WORKSPACE/.cache/trivy/java-db
           rm javadb.tar.gz
 
-      - if: ${{ steps.db-downloaded.outputs.cache-hit != 'true' && github.ref_name == 'master' }}
-        name: Cache DBs
-        uses: actions/cache/save@v4
+      - name: Save DBs in cache of the default (master) branch
+        if: ${{ steps.db-downloaded.outputs.cache-hit != 'true' && github.ref_name == 'master' }}
+        uses: actions/cache/save@6849a6489940f00c2f30c0fb92c6274307ccb58a  # v4.1.2
         with:
           path: ${{ github.workspace }}/.cache/trivy
           key: cache-trivy-${{ steps.date.outputs.date }}
+
   scan:
     name: Scan with Trivy
     needs: update-trivy-db
@@ -69,13 +71,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
 
-      - name: Get current date
+      - name: Get current date to create cache entry
         id: date
         run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
-      - id: db-downloaded
-        name: DB cached already
-        uses: actions/cache/restore@v4
+      - name: Check if Trivy DB cached already
+        id: db-downloaded
+        uses: actions/cache/restore@6849a6489940f00c2f30c0fb92c6274307ccb58a  # v4.1.2
         with:
           path: ${{ github.workspace }}/.cache/trivy
           key: cache-trivy-${{ steps.date.outputs.date }}
@@ -111,7 +113,8 @@ jobs:
           sed -i 's/format: template/format: sarif/g' utils/trivy/trivy.yaml
 
       - name: Run Trivy vulnerability scanner in filesystem mode (sarif format)
-        uses: aquasecurity/trivy-action@master  # 0.28.0
+        # master to have 'skip-setup-trivy'
+        uses: aquasecurity/trivy-action@d2a392a13760cb64cb6bbd31d4bed2a7d9a5298d
         with:
           scan-type: 'fs'
           scan-ref: '.'
@@ -135,7 +138,8 @@ jobs:
           sed -i 's/exit-code: 0/exit-code: 1/g' utils/trivy/trivy.yaml
 
       - name: Run Trivy vulnerability scanner in filesystem mode (human readable format)
-        uses: aquasecurity/trivy-action@master  # 0.28.0
+        # master to have 'skip-setup-trivy'
+        uses: aquasecurity/trivy-action@d2a392a13760cb64cb6bbd31d4bed2a7d9a5298d
         with:
           scan-type: 'fs'
           scan-ref: '.'
@@ -145,8 +149,3 @@ jobs:
         env:
           TRIVY_SKIP_DB_UPDATE: ${{ steps.db-downloaded.outputs.cache-hit == 'true' }}
           TRIVY_SKIP_JAVA_DB_UPDATE: ${{ steps.db-downloaded.outputs.cache-hit == 'true' }}
-
-#      - if: ${{ steps.db-downloaded.outputs.cache-hit != 'true' }}
-#        name: Clean cache to avoid cache overwriting
-#        run: |
-#          rm -rf ${{ github.workspace }}/.cache/trivy

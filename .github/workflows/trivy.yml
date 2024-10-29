@@ -6,7 +6,7 @@ name: Trivy scan
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '* * * * *'
   push:
     branches: ["master", "release/**"]
   pull_request:
@@ -49,7 +49,6 @@ jobs:
 
       - name: Download and extract the vulnerability DB
         if: |
-          steps.db-downloaded.outputs.cache-hit != 'true' &&
           github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
         run: |
           mkdir -p $GITHUB_WORKSPACE/.cache/trivy/db
@@ -59,7 +58,6 @@ jobs:
 
       - name: Download and extract the Java DB
         if: |
-          steps.db-downloaded.outputs.cache-hit != 'true' &&
           github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
         run: |
           mkdir -p $GITHUB_WORKSPACE/.cache/trivy/java-db
@@ -69,7 +67,6 @@ jobs:
 
       - name: Save DBs in cache of the default (master) branch
         if: |
-          steps.db-downloaded.outputs.cache-hit != 'true' &&
           github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
         uses: actions/cache/save@6849a6489940f00c2f30c0fb92c6274307ccb58a  # v4.1.2
         with:

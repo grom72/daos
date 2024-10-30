@@ -18,15 +18,13 @@ permissions: {}
 jobs:
   scan:
     name: Scan with Trivy
-    # Trivy scan may use cached CVEs database if cache already exists.
-    # Otherwise, the Trivy scan tool downloads CVEs database itself.
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
 
       - name: Run Trivy vulnerability scanner in filesystem mode (table format)
-        uses: aquasecurity/trivy-action@915b19bbe73b92a6cf82a1bc12b087c9a19a5fe2  # 0.28.0
+        uses: grom72/trivy-action@skip-download
         with:
           scan-type: 'fs'
           scan-ref: '.'

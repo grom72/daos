@@ -29,7 +29,7 @@ jobs:
     # as it is not executed on the `default` branch
 
     name: Update Trivy DB in the default branch cache
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout code to see if we run on default (master) branch
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
@@ -52,7 +52,7 @@ jobs:
     # Trivy scan may use cached CVEs database if cache already exists.
     # Otherwise, the Trivy scan tool downloads CVEs database itself.
     needs: update-trivy-db
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     permissions:
       security-events: write
     steps:

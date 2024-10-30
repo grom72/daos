@@ -56,7 +56,7 @@ jobs:
         uses: actions/cache/restore@6849a6489940f00c2f30c0fb92c6274307ccb58a  # v4.1.2
         with:
           path: ${{ github.workspace }}/.cache/trivy
-          key: cache-trivy-${{ steps.date.outputs.date }}
+          key: cache-trivy-YY-MM-DD
           lookup-only: true
 
       - name: Download and extract the vulnerability DB
@@ -111,10 +111,10 @@ jobs:
           scan-type: 'fs'
           scan-ref: '.'
           trivy-config: 'utils/trivy/trivy.yaml'
-          cache: false
+          cache: true
         env:
-          TRIVY_SKIP_DB_UPDATE: true
-          TRIVY_SKIP_JAVA_DB_UPDATE: true
+          TRIVY_SKIP_DB_UPDATE: false
+          TRIVY_SKIP_JAVA_DB_UPDATE: false
 
       - name: Prepare the report to be uploaded to the GitHub artifact store
         run: |
@@ -142,10 +142,10 @@ jobs:
           scan-ref: '.'
           trivy-config: 'utils/trivy/trivy.yaml'
           skip-setup-trivy: true
-          cache: false
+          cache: true
         env:
-          TRIVY_SKIP_DB_UPDATE: true
-          TRIVY_SKIP_JAVA_DB_UPDATE: true
+          TRIVY_SKIP_DB_UPDATE: false
+          TRIVY_SKIP_JAVA_DB_UPDATE: false
 
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@afb54ba388a7dca6ecae48f608c4ff05ff4cc77a
@@ -167,7 +167,7 @@ jobs:
           scan-ref: '.'
           trivy-config: 'utils/trivy/trivy.yaml'
           skip-setup-trivy: true
-          cache: false
+          cache: true
         env:
-          TRIVY_SKIP_DB_UPDATE: true
-          TRIVY_SKIP_JAVA_DB_UPDATE: true
+          TRIVY_SKIP_DB_UPDATE: false
+          TRIVY_SKIP_JAVA_DB_UPDATE: false

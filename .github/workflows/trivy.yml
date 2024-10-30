@@ -40,51 +40,12 @@ jobs:
         run: |
           echo "Not on the default branch - skip CVEs database caching"
 
-      # The following steps are executed only on the default branch
-      - name: Setup oras
-        if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
-        uses: oras-project/setup-oras@9c92598691bfef1424de2f8fae81941568f5889c  # v1.21
-
-      - name: Get current date to create cache entry
-        if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
-        id: date
-        run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
-
-      - name: Check if Trivy DB cached already for a given date
-        if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
-        id: db-downloaded
-        uses: actions/cache/restore@6849a6489940f00c2f30c0fb92c6274307ccb58a  # v4.1.2
+      - name: Run Trivy vulnerability scanner in filesystem mode (table format)
+        uses: aquasecurity/trivy-action@915b19bbe73b92a6cf82a1bc12b087c9a19a5fe2  # 0.28.0
         with:
-          path: ${{ github.workspace }}/.cache/trivy
-          key: cache-trivy-${{ steps.date.outputs.date }}
-          lookup-only: true
-
-      - name: Download and extract the vulnerability DB
-        if: |
-          steps.db-downloaded.outputs.cache-hit != 'true' &&
-          github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
-        run: |
-          mkdir -p $GITHUB_WORKSPACE/.cache/trivy/db
-          oras pull ghcr.io/aquasecurity/trivy-db:2
-          tar -xzf db.tar.gz -C $GITHUB_WORKSPACE/.cache/trivy/db
-
-      - name: Download and extract the Java DB
-        if: |
-          steps.db-downloaded.outputs.cache-hit != 'true' &&
-          github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
-        run: |
-          mkdir -p $GITHUB_WORKSPACE/.cache/trivy/java-db
-          oras pull ghcr.io/aquasecurity/trivy-java-db:1
-          tar -xzf javadb.tar.gz -C $GITHUB_WORKSPACE/.cache/trivy/java-db
-
-      - name: Save DBs in cache of the default (master) branch
-        if: |
-          steps.db-downloaded.outputs.cache-hit != 'true' &&
-          github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
-        uses: actions/cache/save@6849a6489940f00c2f30c0fb92c6274307ccb58a  # v4.1.2
-        with:
-          path: ${{ github.workspace }}/.cache/trivy
-          key: cache-trivy-${{ steps.date.outputs.date }}
+          scan-type: 'fs'
+          scan-ref: '.'
+          trivy-config: 'utils/trivy/trivy.yaml'
 
   scan:
     name: Scan with Trivy

@@ -89,16 +89,10 @@ extern void (*d_alt_assert)(const int, const char*, const char*, const int);
 		}                                                                                  \
 	} while (0)
 
-/* The _D_LOG internal macro checks the specified mask and, if enabled, it logs the message,
- * prependng the file, line, and function name.  This function can be used directly by users or by
+/* The _D_DEBUG_* internal macro checks the specified mask and, if enabled, it logs the message,
+ * prependng the file, line, and function name. This function can be used directly by users or by
  * user defined macros if the provided log level macros are not flexible enough.
  */
-#define _D_LOG(func, mask, ...)                                                                    \
-	do {                                                                                       \
-		int __tmp_mask;                                                                    \
-		_D_LOG_CHECK(func, __tmp_mask, mask, ##__VA_ARGS__);                               \
-	} while (0)
-
 #define _D_DEBUG_W_SAVED_MASK(func, saved_mask, level, ...)                                        \
 	do {                                                                                       \
 		if (__builtin_expect(saved_mask, 0)) {                                             \

@@ -92,6 +92,7 @@ extern void (*d_alt_assert)(const int, const char*, const char*, const int);
 /* The _D_DEBUG_* internal macro checks the specified mask and, if enabled, it logs the message,
  * prependng the file, line, and function name. This function can be used directly by users or by
  * user defined macros if the provided log level macros are not flexible enough.
+ * saved_flags - L-value ....
  */
 #define _D_DEBUG_W_SAVED_FLAGS(func, saved_flags, level, ...)                                      \
 	do {                                                                                       \

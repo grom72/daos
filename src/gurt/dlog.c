@@ -668,11 +668,11 @@ void d_vlog(int flags, const char *fmt, va_list ap)
 	 * check for it anyway.
 	 */
 	if (hlen + 1 >= sizeof(b)) {
-		clog_unlock();	/* drop lock, this is the only early exit */
 		dlog_print_err(E2BIG,
 			       "header overflowed %zd byte buffer (%d)\n",
 			       sizeof(b), hlen + 1);
 		errno = save_errno;
+		clog_unlock();
 		return;
 	}
 	/*

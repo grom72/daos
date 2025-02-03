@@ -1,5 +1,6 @@
 /*
  * (C) Copyright 2016-2024 Intel Corporation.
+ * (C) Copyright 2025 Hewlett Packard Enterprise Development LP
  *
  * SPDX-License-Identifier: BSD-2-Clause-Patent
  */
@@ -370,6 +371,7 @@ out:
 
 /* exceeds the size threshold, rename the current log file
  * as backup, create a new log file.
+ * clog_lock() shall be called outside this function;
  */
 static int
 log_rotate(void)
@@ -431,7 +433,6 @@ log_rotate(void)
 	return rc;
 }
 
-
 /**
  * This function can do a few things:
  * - copy log message @msg to log buffer
@@ -440,6 +441,7 @@ log_rotate(void)
  *   original_name.old, and create a new log file.
  *
  * If @flush is true, it writes log buffer to log file immediately.
+ * clog_lock() shall be called outside this function;
  */
 static int
 d_log_write(char *msg, int len, bool flush)
@@ -544,11 +546,10 @@ d_log_disable_logging(void)
 }
 
 /**
- * d_vlog: core log function, front-ended by d_log
- * we vsnprintf the message into a holding buffer to format it.  then we
- * send it to all target output logs.  the holding buffer is set to
- * DLOG_TBSIZ, if the message is too long it will be silently truncated.
- * caller should not hold clogmux, d_vlog will grab it as needed.
+ * d_vlog: core log function, front-ended by d_log we vsnprintf the message into a holding buffer to
+ * format it. Then we send it to all target output logs. The holding buffer is set to DLOG_TBSIZ,
+ * The message will be silently truncated if it is too long. caller should not hold clogmux,
+ * d_vlog will grab it as needed.
  *
  * @param flags returned by d_log_check
  * @param fmt the printf(3) format to use
@@ -584,7 +585,7 @@ void d_vlog(int flags, const char *fmt, va_list ap)
 	lvl = flags & DLOG_PRIMASK;
 	pri = flags & DLOG_PRINDMASK;
 
-	/* Check the facility so we don't crash.   We will just log the message
+	/* Check the facility so we don't crash. We will just log the message
 	 * in this case but it really is indicative of a usage error as user
 	 * didn't pass sanitized flags to this routine
 	 */

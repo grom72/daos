@@ -1,0 +1,15 @@
+name: Dependabot Jira ticket
+# This workflow is triggered to create a Jira ticket for every new dependabot PR
+
+permissions: {}
+
+on:
+  push:
+  pull_request:
+    types: [opened]
+
+jobs:
+  run-if-dependabot:
+    # Remove "|| github.actor == 'grom72'" before merge
+    if: github.actor == 'dependabot' || github.actor == 'grom72'
+    runs-on: ubuntu-latest

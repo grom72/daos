@@ -4,7 +4,10 @@ name: Dependabot Jira ticket
 permissions: {}
 
 on:
+<<<<<<< HEAD
   push:
+=======
+>>>>>>> 95054e32ed (Doc-only: true Automate Jira ticket for dependabot)
   pull_request:
     types: [opened]
 
@@ -13,3 +16,47 @@ jobs:
     # Remove "|| github.actor == 'grom72'" before merge
     if: github.actor == 'dependabot' || github.actor == 'grom72'
     runs-on: ubuntu-latest
+<<<<<<< HEAD
+=======
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Create a new Jira ticket
+        env:
+          # Replace "PMDK" with "DAOS" before pushing to the main repo
+          JIRA_PROJECT_KEY: "PMDK"
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          new_title=$(echo "$PR_TITLE" | sed 's/^Doc-only: true //')
+          jira_response=$(curl -u "${{ secrets.JIRA_EMAIL }}:${{ secrets.JIRA_API_TOKEN }}" \
+            -X POST \
+            -H "Content-Type: application/json" \
+            --data "$(jq -n --arg title "$new_title" \
+                           --arg body "$PR_BODY" \
+                           --arg project_key "$JIRA_PROJECT_KEY" \
+                           '{
+                              fields: {
+                                project: { key: $project_key },
+                                summary: $title,
+                                description: $body,
+                                issuetype: { name: "Story" }
+                              }
+                            }')" ${{ secrets.JIRA_BASE_URL }}
+           )
+
+          jira_ticket_key=$(echo $jira_response | jq -r .key)
+          echo "PR_NEW_TITLE=$jira_ticket_key cq: $new_title" >> $GITHUB_ENV
+
+      - name: Update the PR title with a prefix based on the Jira ticket key
+        env:
+          PR_URL: "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}" # yamllint disable-line
+        run: |
+          curl -X PATCH -sS -o /dev/null \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data "$(jq -n --arg title "$PR_NEW_TITLE" \
+                           '{
+                              title: $title,
+                            }' )" $PR_URL
+>>>>>>> 95054e32ed (Doc-only: true Automate Jira ticket for dependabot)

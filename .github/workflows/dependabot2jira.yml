@@ -30,7 +30,7 @@ jobs:
                                 project: { key: "PMDK" },
                                 summary: $title,
                                 description: $body,
-                                issuetype: { name: "Bug" }
+                                issuetype: { name: "Story" }
                               }
                             }')" ${{ secrets.JIRA_BASE_URL }}
            )

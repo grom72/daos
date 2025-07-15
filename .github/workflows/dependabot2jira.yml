@@ -40,14 +40,12 @@ jobs:
 
       - name: Update PR title with Jira ticket key prefix
         env:
-          NEW_TITLE: $PR_NEW_TITLE
           PR_URL: "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}" # yamllint disable-line
         run: |
-          echo "$NEW_TITLE"
           curl -X PATCH \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Content-Type: application/json" \
-            --data "$(jq -n --arg title "$NEW_TITLE" \
+            --data "$(jq -n --arg title "$PR_NEW_TITLE" \
                            '{
                               title: $title,
                             }' )" $PR_URL

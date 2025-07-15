@@ -11,6 +11,8 @@ jobs:
   run-if-grom72:
     if: github.actor == 'grom72'
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     steps:
       - name: Send request to Jira
         env:

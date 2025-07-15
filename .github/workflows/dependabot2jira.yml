@@ -9,7 +9,8 @@ on:
 
 jobs:
   run-if-dependabot:
-    if: github.actor == 'grom72'
+    # Remove "|| github.actor == 'grom72'" before merge
+    if: github.actor == 'dependabot' || github.actor == 'grom72'
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
@@ -20,7 +21,6 @@ jobs:
           PR_BODY: ${{ github.event.pull_request.body }}
         run: |
           jira_response=$(curl -u "${{ secrets.JIRA_USERNAME }}:${{ secrets.JIRA_PASSWORD }}" \
-            --verbose \
             -X POST \
             -H "Content-Type: application/json" \
             --data "$(jq -n --arg title "$PR_TITLE" \

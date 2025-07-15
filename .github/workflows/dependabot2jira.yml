@@ -13,13 +13,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send request to Jira
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+          BODY: ${{ github.event.pull_request.title }}
         run: |
-          curl -u "${{ secrets.JIRA_USERNAME }}:${{ secrets.JIRA_PASSWORD }}" \
+          jira_response=$(curl -u "${{ secrets.JIRA_USERNAME }}:${{ secrets.JIRA_PASSWORD }}" \
             --verbose \
             -X POST \
             -H "Content-Type: application/json" \
-            --data "$(jq -n --arg title "${{ github.event.pull_request.title }}" \
-                           --arg body "${{ github.event.pull_request.body }}" \
+            --data "$(jq -n --arg title "$TITLE" \
+                           --arg body "$BODY" \
                            '{
                               fields: {
                                 project: { key: "PMDK" },
@@ -27,4 +30,7 @@ jobs:
                                 description: $body,
                                 issuetype: { name: "Bug" }
                               }
-                            }')" "https://daosio.atlassian.net/rest/api/2/issue"
+                            }')" "https://daosio.atlassian.net/rest/api/2/issue")
+          ticket_key=$(echo "$jira_response" | jq -r .key)
+          new_title="$ticket_key cq: $TITLE"
+          echo $new_title

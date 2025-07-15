@@ -18,12 +18,11 @@ jobs:
           BODY: ${{ github.event.pull_request.body }}
           PR_URL: "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}" # yamllint disable-line
         run: |
-          jira_response= \
-            $(curl -u "${{ secrets.JIRA_USERNAME }}:${{ secrets.JIRA_PASSWORD }}" \
-              --verbose \
-              -X POST \
-              -H "Content-Type: application/json" \
-              --data "$(jq -n --arg title "$TITLE" \
+          jira_response=$(curl -u "${{ secrets.JIRA_USERNAME }}:${{ secrets.JIRA_PASSWORD }}" \
+            --verbose \
+            -X POST \
+            -H "Content-Type: application/json" \
+            --data "$(jq -n --arg title "$TITLE" \
                            --arg body "$BODY" \
                            '{
                               fields: {
@@ -33,10 +32,12 @@ jobs:
                                 issuetype: { name: "Bug" }
                               }
                             }')" \
-              "https://daosio.atlassian.net/rest/api/2/issue")
+            "https://daosio.atlassian.net/rest/api/2/issue")
+
           ticket_key=$(echo "$jira_response" | jq -r .key)
           new_title="$ticket_key cq: $TITLE"
           echo $new_title
+
           curl -X PATCH \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Content-Type: application/json" \

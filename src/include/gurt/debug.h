@@ -1,5 +1,7 @@
 /*
  * (C) Copyright 2017-2023 Intel Corporation.
+ * (C) Copyright 2025 Google LLC
+ * (C) Copyright 2025 Hewlett Packard Enterprise Development LP
  *
  * SPDX-License-Identifier: BSD-2-Clause-Patent
  */
@@ -79,103 +81,99 @@ extern void (*d_alt_assert)(const int, const char*, const char*, const int);
 	      __func__, ptr, ##__VA_ARGS__)
 
 /** Internal macro for saving the log, checking it, and printing, if enabled */
-#define _D_LOG_CHECK(func, saved_mask, mask, ...)                                                  \
+#define _D_LOG_CHECK(func, saved_flags, flags, ...)                                                  \
 	do {                                                                                       \
-		(saved_mask) = d_log_check(mask);                                                  \
-		if (saved_mask) {                                                                  \
-			func(saved_mask, ##__VA_ARGS__);                                           \
+		(saved_flags) = d_log_check(flags);                                                  \
+		if (saved_flags) {                                                                  \
+			func(saved_flags, ##__VA_ARGS__);                                           \
 		}                                                                                  \
 	} while (0)
 
-/* The _D_LOG internal macro checks the specified mask and, if enabled, it logs the message,
- * prependng the file, line, and function name.  This function can be used directly by users or by
+/* The _D_DEBUG_* internal macro checks the specified mask and, if enabled, it logs the message,
+ * prependng the file, line, and function name. This function can be used directly by users or by
  * user defined macros if the provided log level macros are not flexible enough.
+ * saved_flags - L-value ....
  */
-#define _D_LOG(func, mask, ...)                                                                    \
+#define _D_DEBUG_W_SAVED_FLAGS(func, saved_flags, level, ...)                                      \
 	do {                                                                                       \
-		int __tmp_mask;                                                                    \
-		_D_LOG_CHECK(func, __tmp_mask, mask, ##__VA_ARGS__);                               \
+		if (__builtin_expect(saved_flags, 0)) {                                            \
+			if ((saved_flags) == (int)DLOG_UNINIT) {                                   \
+				_D_LOG_CHECK(func, saved_flags, (level) | D_LOGFAC,                \
+					     ##__VA_ARGS__);                                       \
+				break;                                                             \
+			}                                                                          \
+			func(saved_flags, ##__VA_ARGS__);                                          \
+		}                                                                                  \
 	} while (0)
 
-#define _D_DEBUG(func, flag, ...)					   \
-	do {								   \
-		if (__builtin_expect(DD_FLAG(flag, D_LOGFAC), 0)) {	   \
-			if (DD_FLAG(flag, D_LOGFAC) == (int)DLOG_UNINIT) { \
-				_D_LOG_CHECK(func,			   \
-					     DD_FLAG(flag, D_LOGFAC),	   \
-					     (flag) | D_LOGFAC,		   \
-					     ##__VA_ARGS__);		   \
-				break;					   \
-			}						   \
-			func(DD_FLAG(flag, D_LOGFAC), ##__VA_ARGS__);	   \
-		}							   \
-	} while (0)
+#define _D_DEBUG(func, level, ...)                                                                  \
+	_D_DEBUG_W_SAVED_FLAGS(func, DD_FLAG(level, D_LOGFAC), level, ##__VA_ARGS__)
 
-#define D_LOG_ENABLED(flag)					\
+#define D_LOG_ENABLED(level)					\
 	({							\
-		_D_DEBUG(D_NOOP, flag);				\
-		__builtin_expect(DD_FLAG(flag, D_LOGFAC), 0);	\
+		_D_DEBUG(D_NOOP, level);				\
+		__builtin_expect(DD_FLAG(level, D_LOGFAC), 0);	\
 	})
 
-/* Log a message conditionally upon resolving the mask
+/* Log a message conditionally upon resolving the level
  *
- * The mask is combined with D_LOGFAC which the user should define before
+ * The level is combined with D_LOGFAC which the user should define before
  * including debug headers
  *
- * \param mask	The debug bits or priority mask
+ * \param level	The priority and/or debug flags
  * \param fmt	The format string to print
  *
  *  User should define D_LOGFAC for the file
  */
-#define D_DEBUG(flag, fmt, ...)				\
-	_D_DEBUG(_D_LOG_NOCHECK, flag, fmt, ##__VA_ARGS__)
+#define D_DEBUG(level, fmt, ...)				\
+	_D_DEBUG(_D_LOG_NOCHECK, level, fmt, ##__VA_ARGS__)
 
-/* Log a pointer value and message conditionally upon resolving the mask
+/* Log a pointer value and message conditionally upon resolving the level
  *
- * The mask is combined with D_LOGFAC which the user should define before
+ * The level is combined with D_LOGFAC which the user should define before
  * including debug headers
  *
- * \param mask	The debug bits or priority mask
+ * \param level	The priority and/or debug flags
  * \param ptr	A pointer value that is put into the message
  * \param fmt	The format string to print
  *
  *  User should define D_LOGFAC for the file
  */
-#define D_TRACE_DEBUG(flag, ptr, fmt, ...)				\
-	_D_DEBUG(_D_TRACE_NOCHECK, flag, ptr, fmt, ##__VA_ARGS__)
+#define D_TRACE_DEBUG(level, ptr, fmt, ...)				\
+	_D_DEBUG(_D_TRACE_NOCHECK, level, ptr, fmt, ##__VA_ARGS__)
 
-/** Special conditional debug so we can pass different flags to base routine
+/** Special conditional debug so we can pass different level to base routine
  *  based on a condition.   With V2, things like cond ? flag1 : flag2 don't
  *  work natively.
  */
-#define D_CDEBUG(cond, flag_true, flag_false, ...)		\
+#define D_CDEBUG(cond, level_true, level_false, ...)		\
 	do {							\
 		if (cond)					\
-			D_DEBUG(flag_true, __VA_ARGS__);	\
+			D_DEBUG(level_true, __VA_ARGS__);	\
 		else						\
-			D_DEBUG(flag_false, __VA_ARGS__);	\
+			D_DEBUG(level_false, __VA_ARGS__);	\
 	} while (0)
 
-#define DL_CDEBUG(cond, flag_true, flag_false, _rc, _fmt, ...)                                     \
+#define DL_CDEBUG(cond, level_true, level_false, _rc, _fmt, ...)                                     \
 	do {                                                                                       \
 		if (cond)                                                                          \
-			D_DEBUG(flag_true, _fmt ": " DF_RC " \n", ##__VA_ARGS__, DP_RC(_rc));      \
+			D_DEBUG(level_true, _fmt ": " DF_RC " \n", ##__VA_ARGS__, DP_RC(_rc));      \
 		else                                                                               \
-			D_DEBUG(flag_false, _fmt ": " DF_RC "\n", ##__VA_ARGS__, DP_RC(_rc));      \
+			D_DEBUG(level_false, _fmt ": " DF_RC "\n", ##__VA_ARGS__, DP_RC(_rc));      \
 	} while (0)
 
 /* Register a descriptor with a parent and a type */
-#define D_TRACE_UP(flag, ptr, parent, type)				\
-	D_TRACE_DEBUG(flag, ptr, "Registered new '%s' from %p\n",	\
+#define D_TRACE_UP(level, ptr, parent, type)				\
+	D_TRACE_DEBUG(level, ptr, "Registered new '%s' from %p\n",	\
 		      type, parent)
 
 /* De-register a descriptor, including all aliases */
-#define D_TRACE_DOWN(flag, ptr)						\
-	D_TRACE_DEBUG(flag, ptr, "Deregistered\n")
+#define D_TRACE_DOWN(level, ptr)						\
+	D_TRACE_DEBUG(level, ptr, "Deregistered\n")
 
 /** Register a root with type */
-#define D_TRACE_ROOT(flag, ptr, type)					\
-	D_TRACE_DEBUG(flag, ptr, "Registered new '%s' as root\n", type)
+#define D_TRACE_ROOT(level, ptr, type)					\
+	D_TRACE_DEBUG(level, ptr, "Registered new '%s' as root\n", type)
 
 /** Helper macros to conditionally output logs conditionally based on
  *  the message priority and the current log level.  See D_DEBUG and

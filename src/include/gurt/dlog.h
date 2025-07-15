@@ -1,5 +1,6 @@
 /*
  * (C) Copyright 2016-2024 Intel Corporation.
+ * (C) Copyright 2025 Hewlett Packard Enterprise Development LP
  *
  * SPDX-License-Identifier: BSD-2-Clause-Patent
  */
@@ -43,7 +44,6 @@ typedef uint64_t d_dbug_t;
 #define DLOG_STDERR     0x20000000	/**< always log to stderr */
 #define DLOG_STDOUT     0x10000000	/**< always log to stdout */
 
-#define DLOG_PRIMASK    0x0fffff00	/**< priority mask */
 #define D_FOREACH_PRIO_MASK(ACTION, arg)				    \
 	ACTION(DLOG_EMIT,  emit,  emit,  0x08000000, arg) /**< emit */	    \
 	ACTION(DLOG_EMERG, fatal, fatal, 0x07000000, arg) /**< emergency */ \
@@ -72,6 +72,7 @@ enum d_log_flag_bits {
 
 #define DLOG_PRISHIFT     24		/**< to get non-debug level */
 #define DLOG_DPRISHIFT    8		/**< to get debug level */
+#define DLOG_PRIMASK      0x0fffff00	/**< priority mask */
 #define DLOG_PRINDMASK    0x0f000000	/**< mask for non-debug level bits */
 #define DLOG_FACMASK      0x000000ff	/**< facility mask */
 #define DLOG_UNINIT       0x80000000	/**< Reserve one bit mask cache */
@@ -264,28 +265,17 @@ static inline int d_log_check(int flags)
 }
 
 /**
- * log a message using stdarg list without checking flags
+ * log a message if type specified by flags is enabled
  *
- * A log line cannot be larger than DLOG_TBSZ (4096), if it is larger it will be
- * (silently) truncated].
+ * A log line must not be longer than 1023, including `\n' at the end, otherwise it will be silent
+ * truncated.
  *
- * \param[in] flags		flags returned from d_log_check
+ * \param[in] flags		returned by d_log_check (facility+level+debug flags),
+ * 				0 indicates no log.
  * \param[in] fmt		printf-style format string
  * \param[in] ap		stdarg list
  */
 void d_vlog(int flags, const char *fmt, va_list ap);
-
-/**
- * log a message if type specified by flags is enabled
- *
- * A log line cannot be larger than DLOG_TBSZ (4096), if it is larger it will be
- * (silently) truncated].
- *
- * \param[in] flags		returned by d_log_check(facility+level+misc
- *				flags), 0 indicates no log.
- * \param[in] fmt		printf-style format string
- * \param[in] ap		stdarg list
- */
 static inline void d_log(int flags, const char *fmt, ...)
 	__attribute__ ((__format__(__printf__, 2, 3)));
 static inline void d_log(int flags, const char *fmt, ...)
@@ -313,7 +303,7 @@ int d_log_allocfacility(const char *aname, const char *lname);
 /**
  * Ensure default cart log is initialized.  This routine calls
  * d_log_open the first time based on D_LOG_MASK and D_LOG_FILE
- * environment variables.   It keeps a reference count so d_log_fini
+ * environment variables. It keeps a reference count so d_log_fini
  * must be called by all callers to release the call d_log_close()
  *
  * Without this mechanism, it is difficult to use the cart logging

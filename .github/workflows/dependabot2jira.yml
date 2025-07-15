@@ -15,7 +15,8 @@ jobs:
       - name: Send request to Jira
         env:
           TITLE: ${{ github.event.pull_request.title }}
-          BODY: ${{ github.event.pull_request.title }}
+          BODY: ${{ github.event.pull_request.body }}
+          PR_URL: "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}" # yamllint disable-line
         run: |
           jira_response=$(curl -u "${{ secrets.JIRA_USERNAME }}:${{ secrets.JIRA_PASSWORD }}" \
             --verbose \
@@ -34,3 +35,8 @@ jobs:
           ticket_key=$(echo "$jira_response" | jq -r .key)
           new_title="$ticket_key cq: $TITLE"
           echo $new_title
+          curl -X PATCH \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data "{\"title\": \"$new_title\"}" \
+            $PR_URL

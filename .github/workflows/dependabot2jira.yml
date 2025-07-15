@@ -39,7 +39,7 @@ jobs:
            )
 
           jira_ticket_key=$(echo $jira_response | jq -r .key)
-          new_title="${PR_TITLE#Doc-only: true }"
+          new_title=$(echo "$PR_TITLE" | sed 's/^Doc-only: true //')
           echo "PR_NEW_TITLE=$jira_ticket_key cq: $new_title" >> $GITHUB_ENV
 
       - name: Update the PR title with a prefix based on the Jira ticket key

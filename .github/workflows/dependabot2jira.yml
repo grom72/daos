@@ -1,5 +1,5 @@
-# .github/workflows/dependabot2jira.yml
-name: Dependabo jira ticket
+name: Dependabot Jira ticket
+# This workflow is triggered to create a Jira ticket for every new dependabot PR
 
 permissions: {}
 
@@ -8,24 +8,23 @@ on:
     types: [opened]
 
 jobs:
-  run-if-grom72:
+  run-if-dependabot:
     if: github.actor == 'grom72'
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
     steps:
-      - name: Send request to Jira
+      - name: Create new Jira ticket
         env:
-          TITLE: ${{ github.event.pull_request.title }}
-          BODY: ${{ github.event.pull_request.body }}
-          PR_URL: "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}" # yamllint disable-line
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
         run: |
           jira_response=$(curl -u "${{ secrets.JIRA_USERNAME }}:${{ secrets.JIRA_PASSWORD }}" \
             --verbose \
             -X POST \
             -H "Content-Type: application/json" \
-            --data "$(jq -n --arg title "$TITLE" \
-                           --arg body "$BODY" \
+            --data "$(jq -n --arg title "$PR_TITLE" \
+                           --arg body "$PR_BODY" \
                            '{
                               fields: {
                                 project: { key: "PMDK" },
@@ -36,15 +35,19 @@ jobs:
                             }')" \
             "https://daosio.atlassian.net/rest/api/2/issue")
 
-          ticket_key=$(echo "$jira_response" | jq -r .key)
-          new_title="$ticket_key cq: $TITLE"
-          echo $new_title
+          jira_ticket_key=$(echo $jira_response | jq -r .key)
+          echo "PR_NEW_TITLE=$jira_ticket_key cq: $PR_TITLE" >> $GITHUB_ENV
 
+      - name: Update PR title with Jira ticket key prefix
+        env:
+          NEW_TITLE: $PR_NEW_TITLE
+          PR_URL: "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}" # yamllint disable-line
+        run: |
+          echo "$NEW_TITLE"
           curl -X PATCH \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Content-Type: application/json" \
-            --data "$(jq -n --arg title "$new_title" \
+            --data "$(jq -n --arg title "$NEW_TITLE" \
                            '{
                               title: $title,
-                            }' )" \
-            $PR_URL
+                            }' )" $PR_URL
